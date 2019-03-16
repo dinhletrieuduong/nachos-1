@@ -14,7 +14,7 @@
 - [ ] 13) Viết báo cáo và nộp chương trình (xóa file object)
 
 ## Phân chia
-Cường: 7, 13
-Dương: 8, 10, 11
-Đạt: 9, 12
-Thứ tự làm để làm được những cái khác đã sắp xếp rồi, nên phải làm xong 7,8,9 mới viết được 10,11,12
+- Cường: 7, 13
+- Dương: 8, 10, 11
+- Đạt: 9, 12
+- Thứ tự làm để làm được những cái khác đã sắp xếp rồi, nên phải làm xong 7,8,9 mới viết được 10,11,12
