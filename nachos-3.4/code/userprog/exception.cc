@@ -48,16 +48,71 @@
 //	are in machine.h.
 //----------------------------------------------------------------------
 
-void
-ExceptionHandler(ExceptionType which)
+void SyscallHandler()
 {
     int type = machine->ReadRegister(2);
+    switch(type)
+    {
+        case SC_Halt:
+            DEBUG('a', "Shutdown, initiated by user program.\n");
+            interrupt->Halt();
+            break;
+            
+        case SC_Exit:
+            break;
+            
+        case SC_Exec:
+            break;
+            
+        case SC_CreateFile:
+            DEBUG('a', "Create file.\n");
+            printf("Chua viet createfile.\n");
+            break;
+            
+        default:
+            printf("Unexpected syscall %d\n", type);
+            break;
+    }
+    
+    machine->registers[PrevPCReg] = machine->registers[PCReg];
+    machine->registers[PCReg] = machine->registers[NextPCReg];
+    machine->registers[NextPCReg] += 4;
+}
 
-    if ((which == SyscallException) && (type == SC_Halt)) {
-	DEBUG('a', "Shutdown, initiated by user program.\n");
-   	interrupt->Halt();
-    } else {
-	printf("Unexpected user mode exception %d %d\n", which, type);
-	ASSERT(FALSE);
+void ExceptionHandler(ExceptionType which)
+{
+    switch(which)
+    {
+        case SyscallException:
+            SyscallHandler();
+            break;
+            
+        case PageFaultException:
+            printf("No valid translation found.\n");
+            break;
+        
+        case ReadOnlyException:
+            printf("Write attempted to page marked \'read-only\'.");
+            break;
+            
+        case BusErrorException:
+            printf("Translation resulted in an invalid physical address.\n");
+            break;
+            
+        case AddressErrorException:
+            printf("Unaligned reference or one that was beyond the end of the address space.\n");
+            break;
+            
+        case OverflowException:
+            printf("Integer overflow!!!.\n");
+            break;
+            
+        case IllegalInstrException:
+            printf("Unimplemented or reserved instruction.\n");
+            break;   
+        
+        case NumExceptionTypes:
+            printf("Cai nay la cai gi day.\n");
+            break;
     }
 }

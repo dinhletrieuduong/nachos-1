@@ -200,15 +200,66 @@ Machine::DumpState()
 //----------------------------------------------------------------------
 
 int Machine::ReadRegister(int num)
-    {
-	ASSERT((num >= 0) && (num < NumTotalRegs));
-	return registers[num];
-    }
+{
+ASSERT((num >= 0) && (num < NumTotalRegs));
+return registers[num];
+}
 
 void Machine::WriteRegister(int num, int value)
+{
+ASSERT((num >= 0) && (num < NumTotalRegs));
+// DEBUG('m', "WriteRegister %d, value %d\n", num, value);
+registers[num] = value;
+}
+ 
+int Machine::System2User(int virtAddr,int len,char* buffer)
+{
+    if (len < 0) 
     {
-	ASSERT((num >= 0) && (num < NumTotalRegs));
-	// DEBUG('m', "WriteRegister %d, value %d\n", num, value);
-	registers[num] = value;
+        return -1;
+    } 
+    
+    if (len == 0) 
+    {
+        return len;
     }
+    
+    int i = 0;
+    int oneChar = 0 ;
+    
+    do 
+    {
+        oneChar = (int) buffer[i];
+        WriteMem(virtAddr+i,1,oneChar);
+        i++;
+    } while(i < len && oneChar != 0);
+    
+    return i;
+}   
+    
+char* Machine::User2System(int virtAddr,int limit)
+{
+    int i;
+    int oneChar;
+    char* kernelBuf = new char[limit + 1];
+    
+    if (kernelBuf == NULL)
+    {
+        return kernelBuf;
+    }
+    
+    memset(kernelBuf, 0, limit + 1);
+    
+    for (i = 0 ; i < limit ;i++)
+    {
+        ReadMem(virtAddr+i,1,&oneChar);
+        kernelBuf[i] = (char)oneChar;
+        if (oneChar == 0)
+        {
+            break;
+        }
+    }
+    
+    return kernelBuf;
+}
 

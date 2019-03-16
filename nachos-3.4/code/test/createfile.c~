@@ -1,0 +1,8 @@
+#include "syscall.h"
+
+int main()
+{
+    CreateFile("WTF");
+    Halt();
+    return 0;
+}
