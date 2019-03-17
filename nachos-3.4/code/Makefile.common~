@@ -70,7 +70,6 @@ THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/bitmap.h\
-	../userprog/syscallfuncs.h\
 	../filesys/filesys.h\
 	../filesys/openfile.h\
 	../machine/console.h\
