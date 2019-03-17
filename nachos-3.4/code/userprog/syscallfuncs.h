@@ -3,3 +3,4 @@
 #include "syscall.h"
 
 void SCF_CreateFile();
+int SCF_Read();

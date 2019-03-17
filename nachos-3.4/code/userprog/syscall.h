@@ -30,6 +30,19 @@
 #define SC_Fork		  9
 #define SC_Yield	  10
 
+#define SC_Sub 		43
+#define SC_ReadInt 	11
+#define SC_PrintfInt 	12
+#define SC_ReadChar 	13
+#define SC_PrintfChar 	14
+#define SC_ReadString 	15
+#define SC_PrintfString 16
+// File macro
+#define	SC_OpenFileID	18			/* Create file  */
+#define	SC_ReadFile	19			/* Create file  */
+#define	SC_SeekFile	20			/* Create file  */
+#define SC_CloseFile 	21
+#define	SC_WriteFile	22			/* Create file  */
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -123,6 +136,10 @@ void Fork(void (*func)());
  * or not. 
  */
 void Yield();		
+
+int Sub(int a, int b);
+void PrintfInt(int a);
+void PrintfChar(char a);
 
 #endif /* IN_ASM */
 

@@ -80,7 +80,7 @@ CreateFile:
 	addiu $2,$0,SC_CreateFile
 	syscall
 	j	$31
-    .end CreateFile
+	.end CreateFile
 
 	.globl Open
 	.ent	Open
@@ -129,6 +129,30 @@ Yield:
 	syscall
 	j	$31
 	.end Yield
+
+	.globl Sub
+	.ent Sub
+Sub:
+	addiu $2,$0,SC_Sub
+	syscall
+	j $31
+	.end Sub
+
+	.globl PrintfInt
+	.ent PrintfInt
+PrintfInt:
+	addiu $2,$0,SC_PrintfInt
+	syscall
+	j $31
+	.end PrintfInt
+
+	.globl PrintfChar
+	.ent PrintfChar
+PrintfChar:
+	addiu $2,$0,SC_PrintfChar
+	syscall
+	j $31
+	.end PrintfChar
 
 /* dummy function to keep gcc happy */
         .globl  __main

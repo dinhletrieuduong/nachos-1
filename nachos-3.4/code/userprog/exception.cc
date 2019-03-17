@@ -68,7 +68,17 @@ void SyscallHandler()
         case SC_CreateFile:
             SCF_CreateFile();
             break;
-            
+		case SC_Read:
+			SCF_Read();
+			break;
+        case SC_PrintfChar:
+		{
+			char ch;
+			ch = (char) machine->ReadRegister(4);
+			//printf("ch = %c",ch);
+			gSynchConsole->Write(&ch, 1);
+			break;
+		}
         default:
             printf("Unexpected syscall %d\n", type);
             break;
@@ -86,7 +96,9 @@ void ExceptionHandler(ExceptionType which)
         case SyscallException:
             SyscallHandler();
             break;
-            
+        
+		case NoException:
+			return;
         case PageFaultException:
             printf("No valid translation found.\n");
             break;
