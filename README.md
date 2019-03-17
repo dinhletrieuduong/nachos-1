@@ -18,3 +18,6 @@
 - Dương: 8, 10, 11
 - Đạt: 9, 12
 - Thứ tự làm để làm được những cái khác đã sắp xếp rồi, nên phải làm xong 7,8,9 mới viết được 10,11,12
+
+## Link tham khảo
+- https://github.com/dangkhoasdc/nachos
