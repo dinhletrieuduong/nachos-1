@@ -42,15 +42,38 @@
 				// calls to UNIX, until the real file system
 				// implementation is available
 class FileSystem {
+	// la 1 OpenFile mang 2 chieu: 10 luong^` file, moi luong co 1 idFile tuong ung voi type: 0<read&write>,1<only read>,2<stdin>,3<stdout>
   public:
-    FileSystem(bool format) {}
+	// Array de luu so file dc mo va kiem tra no co dang mo hay khong
+	OpenFile** openf;
+	int index;
+
+    FileSystem(bool format) {
+		openf = new OpenFile*[10];
+		index = 0;
+		for (int i = 0; i < 10; ++i)
+		{
+			openf[i] = NULL;
+		}
+		this->Create("stdin", 0);
+		this->Create("stdout", 0);
+		openf[index++] = this->Open("stdin", 2);
+		openf[index++] = this->Open("stdout", 3); 
+	}
+	~FileSystem() {
+		for (int i = 0; i < 10; ++i)
+		{
+			if (openf[i] != NULL) delete openf[i];
+		}
+		delete[] openf;
+	}
 
     bool Create(char *name, int initialSize) { 
-	int fileDescriptor = OpenForWrite(name);
+		int fileDescriptor = OpenForWrite(name);
 
-	if (fileDescriptor == -1) return FALSE;
-	Close(fileDescriptor); 
-	return TRUE; 
+		if (fileDescriptor == -1) return FALSE;
+		Close(fileDescriptor); 
+		return TRUE; 
 	}
 
     OpenFile* Open(char *name) {
@@ -58,8 +81,15 @@ class FileSystem {
 
 	  if (fileDescriptor == -1) return NULL;
 	  return new OpenFile(fileDescriptor);
-      }
+	}
 
+    OpenFile* Open(char *name, int type) {
+	  int fileDescriptor = OpenForReadWrite(name, FALSE);
+
+	  if (fileDescriptor == -1) return NULL;
+		index++;
+	  return new OpenFile(fileDescriptor, type);
+     }
     bool Remove(char *name) { return Unlink(name) == 0; }
 
 };
@@ -67,6 +97,9 @@ class FileSystem {
 #else // FILESYS
 class FileSystem {
   public:
+	// Array de luu so file dc mo va kiem tra no co dang mo hay khong
+	OpenFile** openf;
+	int index;
     FileSystem(bool format);		// Initialize the file system.
 					// Must be called *after* "synchDisk" 
 					// has been initialized.
@@ -78,6 +111,7 @@ class FileSystem {
 					// Create a file (UNIX creat)
 
     OpenFile* Open(char *name); 	// Open a file (UNIX open)
+	OpenFile* Open(char *name, int type);
 
     bool Remove(char *name);  		// Delete a file (UNIX unlink)
 

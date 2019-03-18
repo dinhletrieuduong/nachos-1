@@ -7,7 +7,9 @@ main()
 	int len;
 	char filename[maxlen +1];
 	//PrintfInt(123);
-	PrintfChar('a');
+	//PrintfChar('a');
+
+
 	Halt();
 }
 

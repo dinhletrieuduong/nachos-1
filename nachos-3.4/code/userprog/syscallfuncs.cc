@@ -40,14 +40,14 @@ int SCF_Read(){
 	{
 		machine->WriteRegister(2, -1);
 		delete[] buf;
-		break;
+		return -1;
 	}
 	// check openf[id]
 	if (fileSystem->openf[id] == NULL)
 	{
 		machine->WriteRegister(2, -1);
 		delete[] buf;
-		break;
+		return -1;
 	}
 	OldPos = fileSystem->openf[id]->GetCurrentPos();
 	buf = machine->User2System(buffer, charCount);
@@ -59,13 +59,13 @@ int SCF_Read(){
 	
 		machine->System2User(buffer, sz, buf);
 		machine->WriteRegister(2, sz);
-		break;
+		return sz;
 	}
 	
 	if ((fileSystem->openf[id]->Read(buf, charCount) ) > 0)
 	{
 		// Copy data from kernel to user space
-	  NewPos = fileSystem->openf[id]->GetCurrentPos();
+	  	NewPos = fileSystem->openf[id]->GetCurrentPos();
 		machine->System2User(buffer, NewPos - OldPos +1, buf);
 		machine->WriteRegister(2, NewPos - OldPos + 1);
 	}
@@ -73,7 +73,7 @@ int SCF_Read(){
 	{
 		machine->WriteRegister(2, -1);
 		delete[] buf;
-		break;
+		return -1;
 	}
 	// read data from console 
 	
@@ -85,5 +85,5 @@ int SCF_Read(){
 		machine->WriteRegister(2, sz);
 	}*/
 	delete[] buf;
-	break;
+	return 1;
 }
