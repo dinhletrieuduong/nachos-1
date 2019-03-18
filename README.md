@@ -5,7 +5,7 @@
 - [x] 4) Cách tăng program counter
 - [x] 5) int CreateFile(char *name)
 - [x] 6) Viết chương trình createfile
-- [ ] 7) OpenFileID Open(char *name, int type) 
+- [x] 7) OpenFileID Open(char *name, int type) 
 - [x] 8) int ReadFile(char *buffer, int charcount, OpenFileID id) && int WriteFile(char *buffer, int charcount, OpenFileID id)
 - [ ] 9) int Seek(int pos, OpenFileID id)
 - [ ] 10) Viết chương trình echo
