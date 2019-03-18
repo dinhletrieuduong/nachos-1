@@ -1,4 +1,10 @@
+Khai bao bien phai khai bao dau` func, k la bi loi
+
+SC_OpenFileID
+	
 SC_ReadFile
 	Vao filesys.cc .h them 2 thuoc tinh OpenId **openf + index -> them ham destruction, OpenFile* Open(char *name, int type), OpenFile* Open(char *name, int type) (overload cac ham nay`)
 	Vao openfile.cc .h them OpenFile(int f, int t), OpenFile(int sector, int type), khai bao them int type la kieu mo file, int GetCurrentPos() de lay vi tri hien tai
 	FileSystem la 1 OpenFile mang 2 chieu: 10 luong^` file, moi luong co 1 idFile tuong ung voi type: 0<read&write>,1<only read>,2<stdin>,3<stdout>
+SC_WriteFile
+

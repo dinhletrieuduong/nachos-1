@@ -154,10 +154,49 @@ PrintfChar:
 	j $31
 	.end PrintfChar
 
+	.globl PrintfString
+	.ent PrintfString
+PrintfString:
+	addiu $2,$0,SC_PrintfString
+	syscall
+	j $31
+	.end PrintfString
+
+	.globl OpenFileFunc
+	.ent OpenFileFunc
+OpenFileFunc:
+	addiu $2, $0, SC_OpenFileID
+	syscall
+	j $31
+	.end OpenFileFunc
+
+	.globl ReadFile
+	.ent ReadFile
+ReadFile:
+	addiu $2,$0,SC_ReadFile
+	syscall
+	j $31
+	.end ReadFile
+
+	.globl WriteFile
+	.ent WriteFile
+WriteFile:
+	addiu $2, $0, SC_WriteFile
+	syscall
+	j $31
+	.end WriteFile
+
+	.globl SeekFile
+	.ent SeekFile
+SeekFile:
+	addiu $2, $0, SC_SeekFile
+	syscall
+	j $31
+	.end SeekFile
+
 /* dummy function to keep gcc happy */
         .globl  __main
         .ent    __main
 __main:
         j       $31
         .end    __main
-

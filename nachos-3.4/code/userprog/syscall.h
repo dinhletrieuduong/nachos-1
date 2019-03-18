@@ -22,7 +22,7 @@
 #define SC_Exit		  1
 #define SC_Exec		  2
 #define SC_Join		  3
-#define SC_CreateFile 4
+#define SC_Create 4
 #define SC_Open		  5
 #define SC_Read		  6
 #define SC_Write	  7
@@ -38,11 +38,15 @@
 #define SC_ReadString 	15
 #define SC_PrintfString 16
 // File macro
+#define	SC_CreateFile	17
 #define	SC_OpenFileID	18			/* Create file  */
-#define	SC_ReadFile	19			/* Create file  */
-#define	SC_SeekFile	20			/* Create file  */
+#define	SC_ReadFile		19			/* Create file  */
+#define	SC_SeekFile		20			/* Create file  */
 #define SC_CloseFile 	21
 #define	SC_WriteFile	22			/* Create file  */
+
+#define LIMIT 255
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -89,6 +93,7 @@ int Join(SpaceId id);
  
 /* A unique identifier for an open Nachos file. */
 typedef int OpenFileId;	
+//typedef int OpenFileID;
 
 /* when an address space starts up, it has two open files, representing 
  * keyboard input and display output (in UNIX terms, stdin and stdout).
@@ -140,6 +145,13 @@ void Yield();
 int Sub(int a, int b);
 void PrintfInt(int a);
 void PrintfChar(char a);
+void PrintfString(char buff[]);
+
+/*Open file*/ // OpenFileID Open
+OpenFileId OpenFileFunc(char name[], int type);
+int ReadFile(char* name, int charcount, OpenFileId FileID);
+int WriteFile(char* name, int charcount,OpenFileId openfile);
+int SeekFile(int pos, OpenFileId FileID);
 
 #endif /* IN_ASM */
 
