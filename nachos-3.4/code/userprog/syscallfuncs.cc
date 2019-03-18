@@ -1,5 +1,23 @@
 #include "syscallfuncs.h"
 
+void SCF_ExecCmd();
+{
+    static const int MaxCmdLength = 64;
+    int virtAddr = machine->ReadRegister(4);
+    char* cmd = machine->User2System(virtAddr, MaxCmdLength + 1);
+    
+    if (cmd == NULL)
+    {
+        printf("Not enough memory in system\n");
+        machine->WriteRegister(2, -1);
+        delete cmd;
+        return;
+    }
+    
+    printf("Executing \'%s\'\n", cmd);
+    machine->WriteRegister(2, 0);
+}
+
 void SCF_CreateFile()
 {
     static const int MaxFileLength = 32;
@@ -245,7 +263,28 @@ int SCF_SeekFile(){
 	return i-1;
 }
 
+void SCF_PrintChar()
+{
+    char ch;
+    ch = (char) machine->ReadRegister(4);
+    gSynchConsole->Write(&ch, 1);
+}
 
+void SCF_PrintString()
+{
+    int bufAddr = machine->ReadRegister(4);
+    int i = 0;
+    char *buf = new char[LIMIT];
+    buf = machine->User2System(bufAddr, LIMIT);
+    while (buf[i] != 0 && buf[i] != '\n')
+    {
+        gSynchConsole->Write(buf+i, 1);
+        i++;
+    }
+    buf[i] = '\n';
+    gSynchConsole->Write(buf+i,1);
+    delete[] buf;
+}
 
 
 

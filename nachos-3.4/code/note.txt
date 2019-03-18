@@ -1,3 +1,6 @@
+Trong thư mục "test" có file start.c không cần thiết, do đó không cần chỉnh sữa (đã xóa file)
+Thêm file test.sh -> Biên dịch và run các test cơ bản
+
 Khai bao bien phai khai bao dau` func, k la bi loi
 Khai bao 1 SC_Func thi vao code/test/start.c và code/test/start.s (tui no giong nhau het chi khac moi ten SC_Func va Func)
 

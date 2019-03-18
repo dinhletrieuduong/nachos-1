@@ -63,48 +63,52 @@ void SyscallHandler()
             break;
             
         case SC_Exec:
+            SCF_ExecCmd();
             break;
         
         case SC_PrintfChar:
-        {
-            char ch;
-            ch = (char) machine->ReadRegister(4);
-            //printf("ch = %c",ch);
-            gSynchConsole->Write(&ch, 1);
+            SCF_PrintChar();
             break;
-        }
+            
         case SC_PrintfString:
-        {
-            int bufAddr = machine->ReadRegister(4);
-            int i = 0;
-            char *buf = new char[LIMIT];
-            buf = machine->User2System(bufAddr, LIMIT);
-            while (buf[i] != 0 && buf[i] != '\n')
-            {
-                gSynchConsole->Write(buf+i, 1);
-                i++;
-            }
-            buf[i] = '\n';
-            gSynchConsole->Write(buf+i,1);
-            delete[] buf;
+            SCF_PrintString;
             break;
-        }
 
         case SC_CreateFile:
             SCF_CreateFile();
             break;
+            
+        case SC_Create:
+            SCF_CreateFile();
+            break;
+            
         case SC_OpenFileID:
             SCF_OpenFileID();
             break;
+            
+        case SC_Close:
+            break;
+            
         case SC_ReadFile:
             SCF_ReadFile();
             break;
+            
+        case SC_Read:
+            SCF_ReadFile();
+            break;
+            
         case SC_WriteFile:
             SCF_WriteFile();
             break;
+            
+        case SC_Write:
+            SCF_WriteFile();
+            break;
+            
         case SC_SeekFile:
             SCF_SeekFile();
             break;
+            
         default:
             printf("Unexpected syscall %d\n", type);
             break;

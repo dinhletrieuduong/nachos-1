@@ -22,7 +22,7 @@
 #define SC_Exit		  1
 #define SC_Exec		  2
 #define SC_Join		  3
-#define SC_Create 4
+#define SC_Create     4
 #define SC_Open		  5
 #define SC_Read		  6
 #define SC_Write	  7
@@ -30,8 +30,8 @@
 #define SC_Fork		  9
 #define SC_Yield	  10
 
-#define SC_Sub 		43
-#define SC_ReadInt 	11
+#define SC_Sub 		    43
+#define SC_ReadInt    	11
 #define SC_PrintfInt 	12
 #define SC_ReadChar 	13
 #define SC_PrintfChar 	14

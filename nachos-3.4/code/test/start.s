@@ -164,7 +164,7 @@ PrintfString:
 
 	.globl OpenFileFunc
 	.ent OpenFileFunc
-OpenFileFunc:
+OpenFileID:
 	addiu $2, $0, SC_OpenFileID
 	syscall
 	j $31

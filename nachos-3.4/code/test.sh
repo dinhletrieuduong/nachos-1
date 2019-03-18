@@ -14,3 +14,7 @@ function runcmd()
 
 runcmd "halt"
 runcmd "createfile"
+runcmd "test"
+runcmd "shell"
+runcmd "sort"
+runcmd "matmult"
