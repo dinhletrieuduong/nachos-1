@@ -6,7 +6,7 @@
 - [x] 5) int CreateFile(char *name)
 - [x] 6) Viết chương trình createfile
 - [ ] 7) OpenFileID Open(char *name, int type) 
-- [ ] 8) int Read(char *buffer, int charcount, OpenFileID id) && int Write(char *buffer, int charcount, OpenFileID id)
+- [x] 8) int ReadFile(char *buffer, int charcount, OpenFileID id) && int WriteFile(char *buffer, int charcount, OpenFileID id)
 - [ ] 9) int Seek(int pos, OpenFileID id)
 - [ ] 10) Viết chương trình echo
 - [ ] 11) Viết chương trình cat
