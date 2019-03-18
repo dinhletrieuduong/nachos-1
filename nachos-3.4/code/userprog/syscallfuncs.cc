@@ -1,6 +1,6 @@
 #include "syscallfuncs.h"
 
-void SCF_ExecCmd();
+void SCF_ExecCmd()
 {
     static const int MaxCmdLength = 64;
     int virtAddr = machine->ReadRegister(4);
