@@ -75,7 +75,7 @@ void SyscallHandler()
             break;
 
         case SC_CreateFile:
-            SCF_CreateFile();
+            machine->WriteRegister(2, SCF_CreateFile());
             break;
             
         case SC_Create:
@@ -90,7 +90,7 @@ void SyscallHandler()
             break;
             
         case SC_ReadFile:
-            SCF_ReadFile();
+            machine->WriteRegister(2, SCF_ReadFile());
             break;
             
         case SC_Read:

@@ -18,7 +18,7 @@ void SCF_ExecCmd()
     machine->WriteRegister(2, 0);
 }
 
-void SCF_CreateFile()
+int SCF_CreateFile()
 {
     static const int MaxFileLength = 32;
     int virtAddr = machine->ReadRegister(4);
@@ -26,10 +26,9 @@ void SCF_CreateFile()
     
     if (fileName == NULL)
     {
-        printf("Not enough memory in system\n");
-        machine->WriteRegister(2, -1);
+        printf("Not enough memory in system\n");        
         delete fileName;
-        return;
+        return -1;
     }
     
     printf("Create new file \'%s\'\n", fileName);
@@ -37,13 +36,12 @@ void SCF_CreateFile()
     if (!fileSystem->Create(fileName, 0))
     {
         printf("Error while creating file \'%s\'\n", fileName);
-        machine->WriteRegister(2, -1);
         delete fileName;
-        return;
+        return -1;
     }
     
-    machine->WriteRegister(2, 0);
     delete fileName;
+	return 0;
 }
 
 int SCF_OpenFileID(){
@@ -83,7 +81,7 @@ int SCF_OpenFileID(){
 		return -1;
 	};
 }
-int SCF_ReadFile(){
+void SCF_ReadFile(){
 	int buffer = machine->ReadRegister(4);
 	int charCount = machine->ReadRegister(5);
 	int id = machine->ReadRegister(6);	
@@ -95,14 +93,12 @@ int SCF_ReadFile(){
 	// Do toi da la 10 file, > 10 thi dung`
 	if (id < 0 || id > 10)
 	{
-		machine->WriteRegister(2, -1);
 		delete[] buf;
 		return -1;
 	}
 	// check openf[id]
 	if (fileSystem->openf[id] == NULL) // kiem tra xem file co mo thanh cong k, thanh cong != NULL
 	{
-		machine->WriteRegister(2, -1);
 		delete[] buf;
 		return -1;
 	}
@@ -115,7 +111,6 @@ int SCF_ReadFile(){
 		/*  machine->System2User(buffer, sz, buf);*/
 	
 		machine->System2User(buffer, sz, buf);
-		machine->WriteRegister(2, sz);
 		return sz;
 	}
 	
@@ -124,11 +119,10 @@ int SCF_ReadFile(){
 		// Copy data from kernel to user space
 	  	NewPos = fileSystem->openf[id]->GetCurrentPos();
 		machine->System2User(buffer, NewPos - OldPos +1, buf);
-		machine->WriteRegister(2, NewPos - OldPos + 1);
+		return NewPos - OldPos + 1;
 	}
 	else
 	{
-		machine->WriteRegister(2, -1);
 		delete[] buf;
 		return -1;
 	}
