@@ -50,7 +50,6 @@ int SCF_OpenFileID(){
 	char *buf = new char[LIMIT];
 	if (fileSystem->index > 10)
 	{
-		machine->WriteRegister(2, -1);
 		delete[] buf;
 		return -1;
 	}
@@ -58,25 +57,21 @@ int SCF_OpenFileID(){
 	if (strcmp(buf,"stdin") == 0)
 	{
 		printf("stdin mode\n");
-		machine->WriteRegister(2, 0);
 		return 0;
 	}
 	if (strcmp(buf,"stdout") == 0)
 	{
 		printf("stdout mode\n");
-		machine->WriteRegister(2, 1);
 		return 1;
 	}
 	if ((fileSystem->openf[fileSystem->index] = fileSystem->Open(buf, type)) != NULL)
 	{
 		DEBUG('f',"open file successfully");
-		machine->WriteRegister(2, fileSystem->index-1);
 		delete [] buf;
 		return fileSystem->index-1;
 	} else 
 	{
 		DEBUG('f',"can not open file");
-		machine->WriteRegister(2, -1);
 		delete [] buf;
 		return -1;
 	};

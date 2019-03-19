@@ -83,7 +83,7 @@ void SyscallHandler()
             break;
             
         case SC_OpenFileID:
-            SCF_OpenFileID();
+            machine->WriteRegister(2,SCF_OpenFileID());
             break;
             
         case SC_Close:
