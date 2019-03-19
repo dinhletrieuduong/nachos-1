@@ -162,13 +162,13 @@ PrintfString:
 	j $31
 	.end PrintfString
 
-	.globl OpenFileFunc
-	.ent OpenFileFunc
+	.globl OpenFileID
+	.ent OpenFileID
 OpenFileID:
 	addiu $2, $0, SC_OpenFileID
 	syscall
 	j $31
-	.end OpenFileFunc
+	.end OpenFileID
 
 	.globl ReadFile
 	.ent ReadFile

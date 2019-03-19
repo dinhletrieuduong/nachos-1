@@ -148,7 +148,7 @@ void PrintfChar(char a);
 void PrintfString(char buff[]);
 
 /*Open file*/ // OpenFileID Open
-OpenFileId OpenFileFunc(char name[], int type);
+OpenFileId OpenFileID(char name[], int type);
 int ReadFile(char* name, int charcount, OpenFileId FileID);
 int WriteFile(char* name, int charcount,OpenFileId openfile);
 int SeekFile(int pos, OpenFileId FileID);

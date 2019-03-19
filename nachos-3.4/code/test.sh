@@ -1,7 +1,5 @@
 #!/bin/sh
 
-make all
-
 RUN_CMD='./userprog/nachos -rs 1023 -x'
 
 function runcmd()

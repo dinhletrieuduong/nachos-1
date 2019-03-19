@@ -63,7 +63,7 @@ void SyscallHandler()
             break;
             
         case SC_Exec:
-            SCF_ExecCmd();
+            machine->WriteRegister(2, SCF_ExecCmd());
             break;
         
         case SC_PrintfChar:
@@ -83,7 +83,7 @@ void SyscallHandler()
             break;
             
         case SC_OpenFileID:
-            machine->WriteRegister(2,SCF_OpenFileID());
+            machine->WriteRegister(2, SCF_OpenFileID());
             break;
             
         case SC_Close:

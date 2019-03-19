@@ -18,11 +18,13 @@ main()
 
 	i = 0;
 	
+	PrintfString("User Input >>> ");
+	
 	do {
 	
-	    Read(&buffer[i], 1, input); 
+	    Read(&buffer[i], 1, input);
 
-	} while( buffer[i++] != '\n' );
+	} while( buffer[i++] != '\n' && i < 60);
 
 	buffer[--i] = '\0';
 

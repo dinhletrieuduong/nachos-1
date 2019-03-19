@@ -1,6 +1,6 @@
 #include "syscallfuncs.h"
 
-void SCF_ExecCmd()
+int SCF_ExecCmd()
 {
     static const int MaxCmdLength = 64;
     int virtAddr = machine->ReadRegister(4);
@@ -9,13 +9,12 @@ void SCF_ExecCmd()
     if (cmd == NULL)
     {
         printf("Not enough memory in system\n");
-        machine->WriteRegister(2, -1);
         delete cmd;
-        return;
+        return -1;
     }
     
     printf("Executing \'%s\'\n", cmd);
-    machine->WriteRegister(2, 0);
+    return 0;
 }
 
 int SCF_CreateFile()
@@ -48,12 +47,17 @@ int SCF_OpenFileID(){
 	int bufAddr = machine->ReadRegister(4); // read string pointer from user
 	int type = machine->ReadRegister(5);
 	char *buf = new char[LIMIT];
+	
 	if (fileSystem->index > 10)
 	{
 		delete[] buf;
 		return -1;
 	}
+	
 	buf = machine->User2System(bufAddr, LIMIT);
+	
+	printf("%s\n", buf);
+	
 	if (strcmp(buf,"stdin") == 0)
 	{
 		printf("stdin mode\n");
@@ -76,7 +80,7 @@ int SCF_OpenFileID(){
 		return -1;
 	};
 }
-void SCF_ReadFile(){
+int SCF_ReadFile(){
 	int buffer = machine->ReadRegister(4);
 	int charCount = machine->ReadRegister(5);
 	int id = machine->ReadRegister(6);	

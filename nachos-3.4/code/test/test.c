@@ -21,7 +21,7 @@ main()
 	char name[255];
 	//PrintfString("Input file name:");
 	//ReadString(name, 255);
-	if ( (fileId= OpenFileFunc("abc.txt", 1)) == -1)
+	if ( (fileId= OpenFileID("abc.txt", 1)) == -1)
 	{
 		PrintfString("Can not open file ");
 		return 0;
@@ -35,6 +35,6 @@ main()
 		ReadFile(&c, 1, fileId);
 		PrintfChar(c);
 	}
-	return 0;
 	Halt();
+	return 0;
 }
