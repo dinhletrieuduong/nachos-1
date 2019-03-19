@@ -71,7 +71,7 @@ void SyscallHandler()
             break;
             
         case SC_PrintfString:
-            SCF_PrintString;
+            SCF_PrintString();
             break;
 
         case SC_CreateFile:

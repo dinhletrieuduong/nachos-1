@@ -1,5 +1,3 @@
-Trong thư mục "test" có file start.c không cần thiết, do đó không cần chỉnh sữa (đã xóa file)
-
 Thêm file test.sh -> Biên dịch và run các test cơ bản
 
 
