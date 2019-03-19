@@ -98,7 +98,7 @@ void SyscallHandler()
             break;
             
         case SC_WriteFile:
-            SCF_WriteFile();
+            machine->WriteRegister(2, SCF_WriteFile());
             break;
             
         case SC_Write:
@@ -106,7 +106,7 @@ void SyscallHandler()
             break;
             
         case SC_SeekFile:
-            SCF_SeekFile();
+            machine->WriteRegister(2, SCF_SeekFile());
             break;
             
         default:

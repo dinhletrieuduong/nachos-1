@@ -149,14 +149,12 @@ int SCF_WriteFile() {
 	// Check id
 	if (id < 0 || id > 10)
 	{
-		machine->WriteRegister(2, -1);
 		delete[] buf;
 		return -1;
 	}
 	// check openf[id]
 	if (fileSystem->openf[id] == NULL)
 	{
-		machine->WriteRegister(2, -1);
 		delete[] buf;
 		return -1;
 	}
@@ -166,19 +164,18 @@ int SCF_WriteFile() {
 	buf = machine->User2System(buffer, charCount);
 	if (fileSystem->openf[id]->type  == 0 || fileSystem->openf[id]->type == 3)
 	{	
-	if ((fileSystem->openf[id]->Write(buf, charCount)) > 0) 
-	{
-		// Copy data from kernel to user space
-		printf("%s",buf);
-		NewPos = fileSystem->openf[id]->GetCurrentPos();
-		machine->WriteRegister(2, NewPos - OldPos + 1);
-	}
-	else if (fileSystem->openf[id]->type == 1);
-	{
-		machine->WriteRegister(2, -1);
-		delete[] buf;
-		return -1;
-	}
+		if ((fileSystem->openf[id]->Write(buf, charCount)) > 0) 
+		{
+			// Copy data from kernel to user space
+			printf("%s",buf);
+			NewPos = fileSystem->openf[id]->GetCurrentPos();
+			return NewPos - OldPos + 1;
+		}
+		else if (fileSystem->openf[id]->type == 1);
+		{
+			delete[] buf;
+			return -1;
+		}
 	}
 	// Write data to console
 	if (fileSystem->openf[id]->type == 3)
@@ -193,68 +190,34 @@ int SCF_WriteFile() {
 		buf[i] = '\n';
 		gSynchConsole->Write(buf+i,1);
 		machine->WriteRegister(2, i-1);
+		delete[] buf;
+		return i - 1;
 	}
 	delete[] buf;
-	return 1;
+	//return 1;
 }
 
 int SCF_SeekFile(){
-	int bufAddr = machine->ReadRegister(4);
-	int NumBuf = machine->ReadRegister(5);
-	int m_index =  machine->ReadRegister(6);
-	int OldPos;
-	int NewPos;
-	char *buf = new char[NumBuf];
-	// Check m_index
+	int pos = machine->ReadRegister(4);
+	int m_index = machine->ReadRegister(5);
 	if (m_index < 0 || m_index > 10)
 	{
-		machine->WriteRegister(2, -1);
-		delete[] buf;
 		return -1;
 	}
 	// check openf[m_index]
 	if (fileSystem->openf[m_index] == NULL)
 	{
-		machine->WriteRegister(2, -1);
-		delete[] buf;
+		printf("seek fail \n");
 		return -1;
 	}
-	OldPos = fileSystem->openf[m_index]->GetCurrentPos();
-	
-	// type must equals '0'
-	buf = machine->User2System(bufAddr, NumBuf);
-	if (fileSystem->openf[m_index]->type  == 0 || fileSystem->openf[m_index]->type == 3)
-	{	
-	if ((fileSystem->openf[m_index]->Write(buf, NumBuf)) > 0) 
-	{
-		// Copy data from kernel to user space
-		printf("%s",buf);
-		NewPos = fileSystem->openf[m_index]->GetCurrentPos();
-		machine->WriteRegister(2, NewPos - OldPos + 1);
-	}
-	else if (fileSystem->openf[m_index]->type == 1);
-	{
-		machine->WriteRegister(2, -1);
-		delete[] buf;
+	pos = (pos == -1) ? fileSystem->openf[m_index]->Length() : pos;
+	if (pos > fileSystem->openf[m_index]->Length() || pos < 0) {
 		return -1;
-	}
-	}
-	// Write data to console
-	int i = 0;
-	if (fileSystem->openf[m_index]->type == 3)
+	} else 
 	{
-		printf("stdout mode\n");
-		while (buf[i] != 0 && buf[i] != '\n')
-		{
-			gSynchConsole->Write(buf+i, 1);
-			i++;
-		}
-		buf[i] = '\n';
-		gSynchConsole->Write(buf+i,1);
-		machine->WriteRegister(2, i-1);
+		fileSystem->openf[m_index]->Seek(pos);
 	}
-	delete[] buf;
-	return i-1;
+	return pos;
 }
 
 void SCF_PrintChar()
