@@ -138,6 +138,27 @@ int SCF_ReadFile(){
 	return 1;
 }
 
+int SCF_ReadLine() {
+	int virtAddr = machine->ReadRegister(4);
+	int charCount = 0;
+	OpenFileId fileId = machine->ReadRegister(6);
+	char* buffer = new char[256];
+
+	do 
+	{
+		gSynchConsole->Read(&buffer[charCount], 1);
+		printf("%d %d\n", buffer[charCount], '\n');
+	} while (buffer[charCount] != '\n' && 
+			 buffer[charCount] != '\0' && 
+			 ++charCount < 256);
+
+	buffer[charCount - 1] = 0;
+
+	machine->System2User(virtAddr, charCount, buffer);
+
+	return charCount;
+}
+
 int SCF_WriteFile() {
 	int buffer = machine->ReadRegister(4);
 	int charCount = machine->ReadRegister(5);
@@ -194,6 +215,11 @@ int SCF_WriteFile() {
 	}
 	delete[] buf;
 	//return 1;
+}
+
+int SCF_WriteLine() 
+{
+	return 0;
 }
 
 int SCF_SeekFile(){

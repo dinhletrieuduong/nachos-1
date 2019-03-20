@@ -44,6 +44,8 @@
 #define	SC_SeekFile		20			/* Create file  */
 #define SC_CloseFile 	21
 #define	SC_WriteFile	22			/* Create file  */
+#define SC_ReadLine     23
+#define SC_WriteLine    24
 
 #define LIMIT 255
 
@@ -152,6 +154,8 @@ OpenFileId OpenFileID(char name[], int type);
 int ReadFile(char* name, int charcount, OpenFileId FileID);
 int WriteFile(char* name, int charcount,OpenFileId openfile);
 int SeekFile(int pos, OpenFileId FileID);
+int ReadLine(char* buffer, OpenFileId input);
+int WriteLine(char* buffer, OpenFileId output);
 
 #endif /* IN_ASM */
 

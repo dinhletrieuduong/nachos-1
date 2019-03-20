@@ -61,10 +61,6 @@ void SyscallHandler()
             
         case SC_Exit:
             break;
-            
-        case SC_Exec:
-            machine->WriteRegister(2, SCF_ExecCmd());
-            break;
         
         case SC_PrintfChar:
             SCF_PrintChar();
@@ -74,12 +70,16 @@ void SyscallHandler()
             SCF_PrintString();
             break;
 
+        case SC_Exec:
+            machine->WriteRegister(2, SCF_ExecCmd());
+            break;
+
         case SC_CreateFile:
             machine->WriteRegister(2, SCF_CreateFile());
             break;
             
         case SC_Create:
-            SCF_CreateFile();
+            machine->WriteRegister(2, SCF_CreateFile());
             break;
             
         case SC_OpenFileID:
@@ -87,6 +87,8 @@ void SyscallHandler()
             break;
             
         case SC_Close:
+            // @FIXME
+            machine->WriteRegister(2, 0);
             break;
             
         case SC_ReadFile:
@@ -94,7 +96,11 @@ void SyscallHandler()
             break;
             
         case SC_Read:
-            SCF_ReadFile();
+            machine->WriteRegister(2, SCF_ReadFile());
+            break;
+
+        case SC_ReadLine:
+            machine->WriteRegister(2, SCF_ReadLine());
             break;
             
         case SC_WriteFile:
@@ -102,7 +108,11 @@ void SyscallHandler()
             break;
             
         case SC_Write:
-            SCF_WriteFile();
+            machine->WriteRegister(2, SCF_WriteFile());
+            break;
+
+        case SC_WriteLine:
+            machine->WriteRegister(2, SCF_WriteLine());
             break;
             
         case SC_SeekFile:

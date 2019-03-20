@@ -178,6 +178,14 @@ ReadFile:
 	j $31
 	.end ReadFile
 
+	.globl ReadLine
+	.ent ReadLine
+ReadLine:
+	addiu $2,$0,SC_ReadLine
+	syscall
+	j $31
+	.end ReadLine
+
 	.globl WriteFile
 	.ent WriteFile
 WriteFile:
@@ -185,6 +193,14 @@ WriteFile:
 	syscall
 	j $31
 	.end WriteFile
+
+	.globl WriteLine
+	.ent WriteLine
+WriteLine:
+	addiu $2, $0, SC_WriteLine
+	syscall
+	j $31
+	.end WriteLine
 
 	.globl SeekFile
 	.ent SeekFile
