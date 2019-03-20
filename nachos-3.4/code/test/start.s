@@ -138,29 +138,37 @@ Sub:
 	j $31
 	.end Sub
 
-	.globl PrintfInt
-	.ent PrintfInt
-PrintfInt:
-	addiu $2,$0,SC_PrintfInt
+	.globl PrintInt
+	.ent PrintInt
+PrintInt:
+	addiu $2,$0,SC_PrintInt
 	syscall
 	j $31
-	.end PrintfInt
+	.end PrintInt
 
-	.globl PrintfChar
-	.ent PrintfChar
-PrintfChar:
-	addiu $2,$0,SC_PrintfChar
+	.globl PrintChar
+	.ent PrintChar
+PrintChar:
+	addiu $2,$0,SC_PrintChar
 	syscall
 	j $31
-	.end PrintfChar
+	.end PrintChar
 
-	.globl PrintfString
-	.ent PrintfString
-PrintfString:
-	addiu $2,$0,SC_PrintfString
+	.globl PrintString
+	.ent PrintString
+PrintString:
+	addiu $2,$0,SC_PrintString
 	syscall
 	j $31
-	.end PrintfString
+	.end PrintString
+	
+	.globl ReadString
+	.ent ReadString
+ReadString:
+	addiu $2,$0,SC_ReadString
+	syscall
+	j $31
+	.end ReadString
 
 	.globl OpenFileID
 	.ent OpenFileID
@@ -178,14 +186,6 @@ ReadFile:
 	j $31
 	.end ReadFile
 
-	.globl ReadLine
-	.ent ReadLine
-ReadLine:
-	addiu $2,$0,SC_ReadLine
-	syscall
-	j $31
-	.end ReadLine
-
 	.globl WriteFile
 	.ent WriteFile
 WriteFile:
@@ -193,14 +193,6 @@ WriteFile:
 	syscall
 	j $31
 	.end WriteFile
-
-	.globl WriteLine
-	.ent WriteLine
-WriteLine:
-	addiu $2, $0, SC_WriteLine
-	syscall
-	j $31
-	.end WriteLine
 
 	.globl SeekFile
 	.ent SeekFile

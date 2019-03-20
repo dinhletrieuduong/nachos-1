@@ -56,8 +56,6 @@ int SCF_OpenFileID(){
 	
 	buf = machine->User2System(bufAddr, LIMIT);
 	
-	printf("%s\n", buf);
-	
 	if (strcmp(buf,"stdin") == 0)
 	{
 		printf("stdin mode\n");
@@ -135,28 +133,7 @@ int SCF_ReadFile(){
 		machine->WriteRegister(2, sz);
 	}*/
 	delete[] buf;
-	return 1;
-}
-
-int SCF_ReadLine() {
-	int virtAddr = machine->ReadRegister(4);
-	int charCount = 0;
-	OpenFileId fileId = machine->ReadRegister(6);
-	char* buffer = new char[256];
-
-	do 
-	{
-		gSynchConsole->Read(&buffer[charCount], 1);
-		printf("%d %d\n", buffer[charCount], '\n');
-	} while (buffer[charCount] != '\n' && 
-			 buffer[charCount] != '\0' && 
-			 ++charCount < 256);
-
-	buffer[charCount - 1] = 0;
-
-	machine->System2User(virtAddr, charCount, buffer);
-
-	return charCount;
+	return 0;
 }
 
 int SCF_WriteFile() {
@@ -217,11 +194,6 @@ int SCF_WriteFile() {
 	//return 1;
 }
 
-int SCF_WriteLine() 
-{
-	return 0;
-}
-
 int SCF_SeekFile(){
 	int pos = machine->ReadRegister(4);
 	int m_index = machine->ReadRegister(5);
@@ -245,6 +217,11 @@ int SCF_SeekFile(){
 	return pos;
 }
 
+void SCF_PrintInt()
+{
+
+}
+
 void SCF_PrintChar()
 {
     char ch;
@@ -263,10 +240,23 @@ void SCF_PrintString()
         gSynchConsole->Write(buf+i, 1);
         i++;
     }
-    buf[i] = '\n';
     gSynchConsole->Write(buf+i,1);
     delete[] buf;
 }
 
-
+int SCF_ReadString()
+{
+    int virtAddr = machine->ReadRegister(4);
+    char* buf = new char[256];
+    int count = 0;
+    
+    do
+    {
+        gSynchConsole->Read(&buf[count], 1);
+    } while (buf[count] != '\0' && ++count < 256);
+    buf[count] = 0;
+    machine->System2User(virtAddr, count, buf);
+    
+    return count;
+}
 

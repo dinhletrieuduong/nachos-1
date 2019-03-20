@@ -61,13 +61,21 @@ void SyscallHandler()
             
         case SC_Exit:
             break;
+            
+        case SC_PrintInt:
+            SCF_PrintInt();
+            break;
         
-        case SC_PrintfChar:
+        case SC_PrintChar:
             SCF_PrintChar();
             break;
             
-        case SC_PrintfString:
+        case SC_PrintString:
             SCF_PrintString();
+            break;
+            
+        case SC_ReadString:
+            machine->WriteRegister(2, SCF_ReadString());
             break;
 
         case SC_Exec:
@@ -99,10 +107,6 @@ void SyscallHandler()
             machine->WriteRegister(2, SCF_ReadFile());
             break;
 
-        case SC_ReadLine:
-            machine->WriteRegister(2, SCF_ReadLine());
-            break;
-            
         case SC_WriteFile:
             machine->WriteRegister(2, SCF_WriteFile());
             break;
@@ -111,10 +115,6 @@ void SyscallHandler()
             machine->WriteRegister(2, SCF_WriteFile());
             break;
 
-        case SC_WriteLine:
-            machine->WriteRegister(2, SCF_WriteLine());
-            break;
-            
         case SC_SeekFile:
             machine->WriteRegister(2, SCF_SeekFile());
             break;

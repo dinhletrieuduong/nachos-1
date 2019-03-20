@@ -32,11 +32,11 @@
 
 #define SC_Sub 		    43
 #define SC_ReadInt    	11
-#define SC_PrintfInt 	12
+#define SC_PrintInt 	12
 #define SC_ReadChar 	13
-#define SC_PrintfChar 	14
+#define SC_PrintChar 	14
 #define SC_ReadString 	15
-#define SC_PrintfString 16
+#define SC_PrintString 16
 // File macro
 #define	SC_CreateFile	17
 #define	SC_OpenFileID	18			/* Create file  */
@@ -44,8 +44,6 @@
 #define	SC_SeekFile		20			/* Create file  */
 #define SC_CloseFile 	21
 #define	SC_WriteFile	22			/* Create file  */
-#define SC_ReadLine     23
-#define SC_WriteLine    24
 
 #define LIMIT 255
 
@@ -145,17 +143,20 @@ void Fork(void (*func)());
 void Yield();		
 
 int Sub(int a, int b);
-void PrintfInt(int a);
-void PrintfChar(char a);
-void PrintfString(char buff[]);
+
+
+void PrintInt(int a);
+void PrintChar(char a);
+void PrintString(char buff[]);
+
+int ReadChar(int virtAddr);
+int ReadString(int virtAddr);
 
 /*Open file*/ // OpenFileID Open
 OpenFileId OpenFileID(char name[], int type);
 int ReadFile(char* name, int charcount, OpenFileId FileID);
 int WriteFile(char* name, int charcount,OpenFileId openfile);
 int SeekFile(int pos, OpenFileId FileID);
-int ReadLine(char* buffer, OpenFileId input);
-int WriteLine(char* buffer, OpenFileId output);
 
 #endif /* IN_ASM */
 
