@@ -78,6 +78,7 @@ int SCF_OpenFileID(){
 		return -1;
 	};
 }
+
 int SCF_ReadFile(){
 	int buffer = machine->ReadRegister(4);
 	int charCount = machine->ReadRegister(5);
@@ -253,9 +254,9 @@ int SCF_ReadString()
     do
     {
         gSynchConsole->Read(&buf[count], 1);
-    } while (buf[count] != '\0' && ++count < 256);
-    buf[count] = 0;
-    machine->System2User(virtAddr, count, buf);
+    } while (buf[count] != '\0' && buf[count] != '\n' && ++count < 256);
+    buf[count] = '\0';
+    machine->System2User(virtAddr, count + 1, buf);
     
     return count;
 }
