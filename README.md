@@ -7,10 +7,10 @@
 - [x] 6) Viết chương trình createfile
 - [x] 7) OpenFileID Open(char *name, int type) 
 - [x] 8) int ReadFile(char *buffer, int charcount, OpenFileID id) && int WriteFile(char *buffer, int charcount, OpenFileID id)
-- [ ] 9) int Seek(int pos, OpenFileID id)
-- [ ] 10) Viết chương trình echo
-- [ ] 11) Viết chương trình cat
-- [ ] 12) Viết chương trình copy
+- [X] 9) int Seek(int pos, OpenFileID id)
+- [X] 10) Viết chương trình echo
+- [X] 11) Viết chương trình cat
+- [X] 12) Viết chương trình copy
 - [ ] 13) Viết báo cáo và nộp chương trình (xóa file object)
 
 ## Phân chia
