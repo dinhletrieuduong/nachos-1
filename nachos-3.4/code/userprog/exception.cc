@@ -141,30 +141,37 @@ void ExceptionHandler(ExceptionType which)
             return;
         case PageFaultException:
             printf("No valid translation found.\n");
+            interrupt->Halt();
             break;
         
         case ReadOnlyException:
             printf("Write attempted to page marked \'read-only\'.");
+            interrupt->Halt();
             break;
             
         case BusErrorException:
             printf("Translation resulted in an invalid physical address.\n");
+            interrupt->Halt();
             break;
             
         case AddressErrorException:
             printf("Unaligned reference or one that was beyond the end of the address space.\n");
+            interrupt->Halt();
             break;
             
         case OverflowException:
             printf("Integer overflow!!!.\n");
+            interrupt->Halt();
             break;
             
         case IllegalInstrException:
             printf("Unimplemented or reserved instruction.\n");
+            interrupt->Halt();
             break;   
         
         case NumExceptionTypes:
             printf("Cai nay la cai gi day.\n");
+            interrupt->Halt();
             break;
     }
 }
