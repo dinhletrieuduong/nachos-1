@@ -267,6 +267,19 @@ OpenFile* FileSystem::Open(char *name, int type)
         index++;
     return openf[index-1];              // return NULL if not found
 }
+
+//----------------------
+// Close
+//
+void
+Close(int fileIndex)
+{
+    if (openf[fileIndex] == NULL)
+        return;
+    delete openf[fileIndex];
+    openf[fileIndex] = NULL;
+}
+
 //----------------------------------------------------------------------
 // FileSystem::Remove
 //  Delete a file from the file system.  This requires:

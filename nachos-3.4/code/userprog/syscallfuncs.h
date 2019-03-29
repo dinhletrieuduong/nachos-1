@@ -12,3 +12,4 @@ void SCF_PrintInt();
 void SCF_PrintChar();
 void SCF_PrintString();
 int  SCF_ReadString();
+void SCF_CloseFile();

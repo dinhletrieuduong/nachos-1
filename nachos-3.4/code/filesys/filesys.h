@@ -70,7 +70,6 @@ class FileSystem {
 
     bool Create(char *name, int initialSize) { 
 		int fileDescriptor = OpenForWrite(name);
-
 		if (fileDescriptor == -1) return FALSE;
 		Close(fileDescriptor); 
 		return TRUE; 
@@ -90,6 +89,14 @@ class FileSystem {
 		index++;
 	  return new OpenFile(fileDescriptor, type);
      }
+     
+    void Close(int fileIndex) { 
+        if (openf[fileIndex] == NULL)
+            return;
+        delete openf[fileIndex];
+        openf[fileIndex] = NULL;
+    }
+    
     bool Remove(char *name) { return Unlink(name) == 0; }
 
 };
@@ -112,6 +119,8 @@ class FileSystem {
 
     OpenFile* Open(char *name); 	// Open a file (UNIX open)
 	OpenFile* Open(char *name, int type);
+	
+	void Close(int fileIndex);
 
     bool Remove(char *name);  		// Delete a file (UNIX unlink)
 

@@ -261,3 +261,9 @@ int SCF_ReadString()
     return count;
 }
 
+void SCF_CloseFile()
+{
+    int index = machine->ReadRegister(4);
+    fileSystem->Close(index);
+}
+

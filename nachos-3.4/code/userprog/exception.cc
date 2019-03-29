@@ -95,8 +95,7 @@ void SyscallHandler()
             break;
             
         case SC_Close:
-            // @FIXME
-            machine->WriteRegister(2, 0);
+            SCF_CloseFile();
             break;
             
         case SC_ReadFile:
