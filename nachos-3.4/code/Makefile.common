@@ -47,7 +47,10 @@ THREAD_H =../threads/copyright.h\
 	../machine/interrupt.h\
 	../machine/sysdep.h\
 	../machine/stats.h\
-	../machine/timer.h
+	../machine/timer.h\
+	../threads/synchcons.h\
+	../threads/ftable.h\
+	../filesys/openfileint.h
 
 THREAD_C =../threads/main.cc\
 	../threads/list.cc\
@@ -61,37 +64,35 @@ THREAD_C =../threads/main.cc\
 	../machine/interrupt.cc\
 	../machine/sysdep.cc\
 	../machine/stats.cc\
-	../machine/timer.cc
+	../machine/timer.cc\
+	../threads/synchcons.cc\
+	../threads/ftable.cc
 
 THREAD_S = ../threads/switch.s
 
 THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
-	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o
+	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o synchcons.o ftable.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/bitmap.h\
-	../userprog/syscallfuncs.h\
 	../filesys/filesys.h\
 	../filesys/openfile.h\
 	../machine/console.h\
 	../machine/machine.h\
 	../machine/mipssim.h\
-	../machine/translate.h\
-	../threads/synchcons.h
+	../machine/translate.h
 
 USERPROG_C = ../userprog/addrspace.cc\
 	../userprog/bitmap.cc\
 	../userprog/exception.cc\
-	../userprog/syscallfuncs.cc\
 	../userprog/progtest.cc\
 	../machine/console.cc\
 	../machine/machine.cc\
 	../machine/mipssim.cc\
-	../machine/translate.cc\
-	../threads/synchcons.cc
+	../machine/translate.cc
 
-USERPROG_O = addrspace.o bitmap.o exception.o syscallfuncs.o progtest.o console.o machine.o \
-	mipssim.o translate.o synchcons.o
+USERPROG_O = addrspace.o bitmap.o exception.o progtest.o console.o machine.o \
+	mipssim.o translate.o
 
 VM_H = 
 VM_C = 

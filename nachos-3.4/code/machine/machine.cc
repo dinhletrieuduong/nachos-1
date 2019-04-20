@@ -200,66 +200,55 @@ Machine::DumpState()
 //----------------------------------------------------------------------
 
 int Machine::ReadRegister(int num)
-{
-ASSERT((num >= 0) && (num < NumTotalRegs));
-return registers[num];
-}
+    {
+	ASSERT((num >= 0) && (num < NumTotalRegs));
+	return registers[num];
+    }
 
 void Machine::WriteRegister(int num, int value)
-{
-ASSERT((num >= 0) && (num < NumTotalRegs));
-// DEBUG('m', "WriteRegister %d, value %d\n", num, value);
-registers[num] = value;
-}
- 
-int Machine::System2User(int virtAddr,int len,char* buffer)
-{
-    if (len < 0) 
     {
-        return -1;
-    } 
-    
-    if (len == 0) 
-    {
-        return len;
+	ASSERT((num >= 0) && (num < NumTotalRegs));
+	// DEBUG('m', "WriteRegister %d, value %d\n", num, value);
+	registers[num] = value;
     }
-    
+
+
+char* Machine::User2System(int addr, int limit)
+{
     int i = 0;
-    int oneChar = 0 ;
-    
-    do 
+    int c = 0;
+    char* buff = new char[limit + 1];
+
+    if (buff == NULL) return NULL;
+
+    memset(buff, 0, limit + 1);
+
+    for (i = 0; i < limit; ++i)
     {
-        oneChar = (int) buffer[i];
-        WriteMem(virtAddr+i,1,oneChar);
-        i++;
-    } while(i < len && oneChar != 0);
-    
-    return i;
-}   
-    
-char* Machine::User2System(int virtAddr,int limit)
-{
-    int i;
-    int oneChar;
-    char* kernelBuf = new char[limit + 1];
-    
-    if (kernelBuf == NULL)
-    {
-        return kernelBuf;
-    }
-    
-    memset(kernelBuf, 0, limit + 1);
-    
-    for (i = 0 ; i < limit ;i++)
-    {
-        ReadMem(virtAddr+i,1,&oneChar);
-        kernelBuf[i] = (char)oneChar;
-        if (oneChar == 0)
+        ReadMem(addr + i, 1, &c);
+        buff[i] = c;
+        if (c == 0)
         {
             break;
         }
     }
-    
-    return kernelBuf;
+
+    return buff;
 }
 
+int Machine::System2User(int addr, char* buff, int len)
+{
+    if (len < 0) return -1;
+    if (len == 0) return 0;
+    int i = 0;
+    int c = 0;
+
+    do 
+    {
+        c = (int)buff[i];
+        WriteMem(addr + i, 1, c);
+        ++i;
+    } while (i < len && c != 0);
+
+    return i;
+}

@@ -1,8 +1,12 @@
 // CAE - MULTI - SYNCHCONSOLE DEFINITION
+#ifndef SYNCHCONS_H
+#define SYNCHCONS_H
+
 
 #include "console.h"
+#include "openfileint.h"
 
-class SynchConsole {
+class SynchConsole : public OpenFileInt {
 public:
 	SynchConsole();				// A SynchConsole Constructor
 	SynchConsole(char *in, char *out);	// Same with fn pointers
@@ -17,3 +21,4 @@ private:
 
 // CAE - MULTI - END SECTION
 
+#endif

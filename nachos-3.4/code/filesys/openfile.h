@@ -22,47 +22,72 @@
 
 #include "copyright.h"
 #include "utility.h"
+#include "openfileint.h"
 
 #ifdef FILESYS_STUB			// Temporarily implement calls to 
 					// Nachos file system as calls to UNIX!
 					// See definitions listed under #else
-class OpenFile {
+class OpenFile : public OpenFileInt {
   public:
-    OpenFile(int f) { file = f; currentOffset = 0; type =0;}	// open the file
-	OpenFile(int f, int t) { file = f; currentOffset = 0; type=t;}	// open the file
-																	// type : mo file de doc/ghi/...
+    OpenFile(int f) { file = f; currentOffset = 0; }	// open the file
+		OpenFile(int f, int t) { file = f; type = t; }
     ~OpenFile() { Close(file); }			// close the file
 
-    int ReadAt(char *into, int numBytes, int position) { 
-    	Lseek(file, position, 0); 
-		return ReadPartial(file, into, numBytes); 
-	}	
-    int WriteAt(char *from, int numBytes, int position) { 
-    	Lseek(file, position, 0); 
-		WriteFile(file, from, numBytes); 
-		return numBytes;
-	}	
-    int Read(char *into, int numBytes) {
-		int numRead = ReadAt(into, numBytes, currentOffset); 
-		currentOffset += numRead;
-		return numRead;
-    		}
-    int Write(char *from, int numBytes) {
-		int numWritten = WriteAt(from, numBytes, currentOffset); 
-		currentOffset += numWritten;
-		return numWritten;
+    int ReadAt(char *into, int numBytes, int position) 
+		{ 
+    		Lseek(file, position, 0); 
+				return ReadPartial(file, into, numBytes); 
+		}	
+
+    int WriteAt(char *from, int numBytes, int position) 
+		{ 
+				if (type == 1)
+   			{
+       			return 0;
+   			}
+    		Lseek(file, position, 0); 
+				WriteFile(file, from, numBytes); 
+				return numBytes;
+		}	
+
+    int Read(char *into, int numBytes) 
+		{
+				int numRead = ReadAt(into, numBytes, currentOffset); 
+				currentOffset += numRead;
+				return numRead;
+    }
+
+    int Write(char *from, int numBytes) 
+		{
+				int numWritten = WriteAt(from, numBytes, currentOffset); 
+				currentOffset += numWritten;
+				return numWritten;
 		}
 
-    int Length() { Lseek(file, 0, 2); return Tell(file); }
-    int Seek(int pos) { 
-		Lseek(file, pos, 0); 
-		currentOffset = Tell(file);
-		return currentOffset;
-	}
-	int type;
+		int Seek(int pos) 
+		{ 
+				Lseek(file, pos, 0); 
+				currentOffset = Tell(file);
+				return currentOffset;
+		}
 
-	int GetCurrentPos() { currentOffset = Tell(file);return currentOffset;}
+    int Length()
+		{
+				int pos = GetCurrentPos();
+				Lseek(file, 0, 2); 
+				int len = Tell(file);
+				Seek(0);
+				return len;
+		}
+
+		int GetCurrentPos() 
+		{ 
+				currentOffset = Tell(file); 	
+				return currentOffset; 
+		}
+    
   private:
+	  int type;
     int file;
     int currentOffset;
 };
@@ -70,12 +95,12 @@ class OpenFile {
 #else // FILESYS
 class FileHeader;
 
-class OpenFile {
+class OpenFile : public OpenFileInt {
   public:
     OpenFile(int sector);		// Open a file whose header is located
-	OpenFile(int sector, int type);		// Open a file whose header is located
-					// type: 0 : only read. 1: read and write.	
 					// at "sector" on the disk
+
+		OpenFile(int sector, int t);
 
     ~OpenFile();			// Close the file
 
@@ -97,17 +122,13 @@ class OpenFile {
 					// file (this interface is simpler 
 					// than the UNIX idiom -- lseek to 
 					// end of file, tell, lseek back 
-	int GetCurrentPos()
-	{
-		return seekPosition;
-	}
-    int type; // type 0: only read
-			// type 1 : read and write
-			// type 2 : stdout
-			// type 3 : stdin
+
+		int GetCurrentPos();
+    
   private:
     FileHeader *hdr;			// Header for this file 
     int seekPosition;			// Current position within the file
+		int type; // @FIXME: type does not effect;
 };
 
 #endif // FILESYS

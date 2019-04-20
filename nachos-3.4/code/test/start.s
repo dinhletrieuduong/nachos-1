@@ -74,13 +74,13 @@ Join:
 	j	$31
 	.end Join
 
-	.globl CreateFile
-	.ent	CreateFile
-CreateFile:
-	addiu $2,$0,SC_CreateFile
+	.globl Create
+	.ent	Create
+Create:
+	addiu $2,$0,SC_Create
 	syscall
 	j	$31
-	.end CreateFile
+	.end Create
 
 	.globl Open
 	.ent	Open
@@ -129,81 +129,20 @@ Yield:
 	syscall
 	j	$31
 	.end Yield
-
-	.globl Sub
-	.ent Sub
-Sub:
-	addiu $2,$0,SC_Sub
-	syscall
-	j $31
-	.end Sub
-
-	.globl PrintInt
-	.ent PrintInt
-PrintInt:
-	addiu $2,$0,SC_PrintInt
-	syscall
-	j $31
-	.end PrintInt
-
-	.globl PrintChar
-	.ent PrintChar
-PrintChar:
-	addiu $2,$0,SC_PrintChar
-	syscall
-	j $31
-	.end PrintChar
-
-	.globl PrintString
-	.ent PrintString
-PrintString:
-	addiu $2,$0,SC_PrintString
-	syscall
-	j $31
-	.end PrintString
 	
-	.globl ReadString
-	.ent ReadString
-ReadString:
-	addiu $2,$0,SC_ReadString
+	.globl Seek
+	.ent	Seek
+Seek:
+	addiu $2,$0,SC_Seek
 	syscall
-	j $31
-	.end ReadString
+	j	$31
+	.end Seek
 
-	.globl OpenFileID
-	.ent OpenFileID
-OpenFileID:
-	addiu $2, $0, SC_OpenFileID
-	syscall
-	j $31
-	.end OpenFileID
 
-	.globl ReadFile
-	.ent ReadFile
-ReadFile:
-	addiu $2,$0,SC_ReadFile
-	syscall
-	j $31
-	.end ReadFile
-
-	.globl WriteFile
-	.ent WriteFile
-WriteFile:
-	addiu $2, $0, SC_WriteFile
-	syscall
-	j $31
-	.end WriteFile
-
-	.globl SeekFile
-	.ent SeekFile
-SeekFile:
-	addiu $2, $0, SC_SeekFile
-	syscall
-	j $31
-	.end SeekFile
 /* dummy function to keep gcc happy */
         .globl  __main
         .ent    __main
 __main:
         j       $31
         .end    __main
+

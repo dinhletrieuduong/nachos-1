@@ -145,14 +145,9 @@ class Machine {
 
     void Debugger();		// invoke the user program debugger
     void DumpState();		// print the user CPU and memory state 
-    
-/* * * * * * * * * * * * * * *
- * * * USER2SYSTEM * * * * * *
- * * * SYSTEM2USER * * * * * */
-    int System2User(int virtAddr,int len,char* buffer);
-    char* User2System(int virtAddr,int limit);
 
-
+		char* User2System(int addr, int limit);
+		int System2User(int addr, char* buff, int len);
 // Data structures -- all of these are accessible to Nachos kernel code.
 // "public" for convenience.
 //

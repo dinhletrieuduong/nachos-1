@@ -18,34 +18,18 @@
 /* system call codes -- used by the stubs to tell the kernel which system call
  * is being asked for
  */
-#define SC_Halt		  0
-#define SC_Exit		  1
-#define SC_Exec		  2
-#define SC_Join		  3
-#define SC_Create     4
-#define SC_Open		  5
-#define SC_Read		  6
-#define SC_Write	  7
-#define SC_Close	  8
-#define SC_Fork		  9
-#define SC_Yield	  10
-
-#define SC_Sub 		    43
-#define SC_ReadInt    	11
-#define SC_PrintInt 	12
-#define SC_ReadChar 	13
-#define SC_PrintChar 	14
-#define SC_ReadString 	15
-#define SC_PrintString 16
-// File macro
-#define	SC_CreateFile	17
-#define	SC_OpenFileID	18			/* Create file  */
-#define	SC_ReadFile		19			/* Create file  */
-#define	SC_SeekFile		20			/* Create file  */
-#define SC_CloseFile 	21
-#define	SC_WriteFile	22			/* Create file  */
-
-#define LIMIT 255
+#define SC_Halt		0
+#define SC_Exit		1
+#define SC_Exec		2
+#define SC_Join		3
+#define SC_Create	4
+#define SC_Open		5
+#define SC_Read		6
+#define SC_Write	7
+#define SC_Close	8
+#define SC_Fork		9
+#define SC_Yield	10
+#define SC_Seek     11
 
 #ifndef IN_ASM
 
@@ -93,7 +77,6 @@ int Join(SpaceId id);
  
 /* A unique identifier for an open Nachos file. */
 typedef int OpenFileId;	
-//typedef int OpenFileID;
 
 /* when an address space starts up, it has two open files, representing 
  * keyboard input and display output (in UNIX terms, stdin and stdout).
@@ -102,15 +85,15 @@ typedef int OpenFileId;
  */
 
 #define ConsoleInput	0  
-#define ConsoleOutput	1  
+#define ConsoleOutput	1
  
 /* Create a Nachos file, with "name" */
-void CreateFile(char *name);
+void Create(char *name);
 
 /* Open the Nachos file "name", and return an "OpenFileId" that can 
  * be used to read and write to the file.
  */
-OpenFileId Open(char *name);
+OpenFileId Open(char *name, int type);
 
 /* Write "size" bytes from "buffer" to the open file. */
 void Write(char *buffer, int size, OpenFileId id);
@@ -140,23 +123,9 @@ void Fork(void (*func)());
 /* Yield the CPU to another runnable thread, whether in this address space 
  * or not. 
  */
-void Yield();		
+void Yield();
 
-int Sub(int a, int b);
-
-
-void PrintInt(int a);
-void PrintChar(char a);
-void PrintString(char buff[]);
-
-int ReadChar(int virtAddr);
-int ReadString(int virtAddr);
-
-/*Open file*/ // OpenFileID Open
-OpenFileId OpenFileID(char name[], int type);
-int ReadFile(char* name, int charcount, OpenFileId FileID);
-int WriteFile(char* name, int charcount,OpenFileId openfile);
-int SeekFile(int pos, OpenFileId FileID);
+int Seek(int pos, OpenFileId id);
 
 #endif /* IN_ASM */
 
