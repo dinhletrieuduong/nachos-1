@@ -2,11 +2,56 @@
 #include "system.h"
 #include "syscall.h"
 
-#define MAX_FILE_LENGTH 32
+#define MAX_FILE_LENGTH 256
+
+void __StartProcess(int addr)
+{
+    printf("Address: %d\n", addr);
+    char* filename = machine->User2System(addr, MAX_FILE_LENGTH);
+    OpenFile *executable = fileSystem->Open(filename);
+    AddrSpace *space;
+
+    printf("Execute %s\n", filename);
+
+    if (executable == NULL) {
+	    printf("Unable to open file %s\n", filename);
+        delete filename;
+	    ASSERT(FALSE);
+    }
+
+    delete filename;
+
+    space = new AddrSpace(executable);    
+    currentThread->space = space;
+
+    delete executable;			// close file
+
+    space->InitRegisters();		// set the initial register values
+    space->RestoreState();		// load page table register
+
+    machine->Run();			// jump to the user progam
+    ASSERT(FALSE);			// machine->Run never returns;
+					// the address space exits
+					// by doing the syscall "exit"
+}
 
 void SCF_Exit()
 {
+}
 
+int SCF_Exec()
+{
+    static int id = 0;
+    char sid[3];
+    int addr = machine->ReadRegister(4);
+
+    sid[0] = (id / 10) + '0';
+    sid[1] = (id % 10) + '0';
+    sid[2] = 0;
+
+    __StartProcess(addr);
+
+    return id++;
 }
 
 int SCF_Create()

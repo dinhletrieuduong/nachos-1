@@ -18,6 +18,8 @@
 
 #define UserStackSize		1024 	// increase this as necessary!
 
+extern unsigned int totalPagesCount;
+
 class AddrSpace {
   public:
     AddrSpace(OpenFile *executable);	// Create an address space,
@@ -36,6 +38,7 @@ class AddrSpace {
 					// for now!
     unsigned int numPages;		// Number of pages in the virtual 
 					// address space
+
 };
 
 #endif // ADDRSPACE_H

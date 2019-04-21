@@ -88,6 +88,13 @@ SyscallHandler()
             SCF_Close();
             break;
 
+        case SC_Exec:
+            machine->WriteRegister(2, SCF_Exec());
+            break;
+
+        case SC_Join:
+            break;
+
         case SC_Exit:
             DEBUG('a', "Closed program.\n");
             break;
