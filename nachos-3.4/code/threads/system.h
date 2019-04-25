@@ -39,6 +39,16 @@ extern Machine* machine;	// user program memory and registers
 extern FTable* gFTable;
 #include "bitmap.h"
 extern BitMap *gBitMapPhysPage;
+#include "synch.h"
+/*declare addrLock*/
+extern Semaphore* addrLock;
+#include "stable.h"
+/*declare semTab*/
+extern STable* semTab;
+/*include ptable.h*/
+#include "ptable.h"
+/*declare pTab*/
+extern PTable* pTab;
 #endif
 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
