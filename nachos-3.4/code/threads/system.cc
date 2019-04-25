@@ -31,6 +31,7 @@ SynchDisk   *synchDisk;
 Machine* machine;	// user program memory and registers
 //SynchConsole* gSynchConsole;
 FTable* gFTable;
+BitMap *gBitMapPhysPage;
 #endif
 
 #ifdef NETWORK
@@ -184,6 +185,7 @@ Cleanup()
     delete machine;
     //delete gSynchConsole;
     delete gFTable;
+    delete gBitMapPhysPage;
 #endif
 
 #ifdef FILESYS_NEEDED
@@ -200,4 +202,5 @@ Cleanup()
     
     Exit(0);
 }
+
 
