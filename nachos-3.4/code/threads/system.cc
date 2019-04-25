@@ -32,6 +32,10 @@ Machine* machine;	// user program memory and registers
 //SynchConsole* gSynchConsole;
 FTable* gFTable;
 BitMap *gBitMapPhysPage;
+Semaphore* addrLock;
+STable* semTab;
+PTable* pTab;
+
 #endif
 
 #ifdef NETWORK
@@ -154,9 +158,10 @@ Initialize(int argc, char **argv)
     machine = new Machine(debugUserProg);	// this must come first
     //gSynchConsole = new SynchConsole();
     gFTable = new FTable(10);
-
+    addrLock = new Semaphore("addrLock", 1);
     gPhysPageBitMap = new BitMap(NumPhysPages);
-
+    semTab = new STable();
+    pTab = new PTable();
 #endif
 
 #ifdef FILESYS
@@ -189,6 +194,10 @@ Cleanup()
     //delete gSynchConsole;
     delete gFTable;
     delete gBitMapPhysPage;
+    delete gFTable;
+    delete addrLock;
+    delete semTab;
+    delete pTab;
 #endif
 
 #ifdef FILESYS_NEEDED
