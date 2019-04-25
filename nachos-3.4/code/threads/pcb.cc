@@ -48,22 +48,24 @@ char* PCB::GetFileName() {
 int PCB::Exec(char *filename, int pID) {
 	mutex->P();
 	if (filename == NULL || pID < 0 || thread != NULL) {
+		printf("\nError: File name is null or id is negative or can't create new thread...\n");
         mutex->V();
         return -1;
     }
-	// thread = new Thread(filename);
-	// thread->ID = pID;
-	// pid = pID;
+	thread = new Thread(filename);
+	thread->ID = pID;
+	pid = pID;
 	OpenFile *execution = fileSystem->Open(filename);
 	AddrSpace *space = new AddrSpace(execution);
-	 delete executable;
+	
 	if(space == NULL) {
-		printf("\nLoi: Not enough space...\n");
+		printf("\nError: Not enough space...\n");
 		mutex->V();
 		return -1; 
 	}
 	currentThread->space = space;
-
+	delete executable;
+	delete space;
 	thread->Fork(StartProcess,pID);
 	mutex->V();
 	return pID;
