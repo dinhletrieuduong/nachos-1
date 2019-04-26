@@ -50,6 +50,9 @@ THREAD_H =../threads/copyright.h\
 	../machine/timer.h\
 	../threads/synchcons.h\
 	../threads/ftable.h\
+	../threads/ptable.h\
+	../threads/stable.h\
+	../threads/sem.h\
 	../filesys/openfileint.h
 
 THREAD_C =../threads/main.cc\
@@ -66,12 +69,15 @@ THREAD_C =../threads/main.cc\
 	../machine/stats.cc\
 	../machine/timer.cc\
 	../threads/synchcons.cc\
-	../threads/ftable.cc
+	../threads/ftable.cc\
+	../threads/ptable.cc\
+	../threads/sem.cc\
+	../threads/stable.cc
 
 THREAD_S = ../threads/switch.s
 
 THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
-	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o synchcons.o ftable.o
+	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o synchcons.o ftable.o ptable.o stable.o sem.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/bitmap.h\
@@ -142,3 +148,4 @@ depend: $(CFILES) $(HFILES)
 	echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
 	echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
 	echo '# see make depend above' >> Makefile
+
