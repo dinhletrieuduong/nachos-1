@@ -1,129 +1,128 @@
-// pcb.cc, "Process Control Block"
-// All rights reserved.
-
-/////////////////////////////////////////////////
-// 	DH KHTN - DHQG TPHCM			/
-// 	1512034 Nguyen Dang Binh		/
-// 	1512042 Nguyen Thanh Chung		/
-// 	1512123 Hoang Ngoc Duc			/
-/////////////////////////////////////////////////
-
 #include "pcb.h"
 #include "utility.h"
 #include "system.h"
 #include "thread.h"
 #include "addrspace.h"
 
-
-extern void StartProcess_2(int id);
-
-PCB::PCB(int id)
-{
-    if (id == 0)
-        this->parentID = -1;
-    else
-        this->parentID = currentThread->processID;
-
-	this->numwait = this->exitcode = this->boolBG = 0;
-	this->thread = NULL;
-
-	this->joinsem = new Semaphore("joinsem",0);
-	this->exitsem = new Semaphore("exitsem",0);
-	this->multex = new Semaphore("multex",1);
-}
-PCB::~PCB()
-{
+PCB::PCB(int id) {
+	joinsem = new Semaphore("JoinSem",0);
+	exitsem = new Semaphore("ExitSem",0);
+	mutex = new Semaphore("Mutex",1);
 	
-	if(joinsem != NULL)
-		delete this->joinsem;
-	if(exitsem != NULL)
-		delete this->exitsem;
-	if(multex != NULL)
-		delete this->multex;
-	if(thread != NULL)
-	{		
-		thread->FreeSpace();
-		thread->Finish();
-		
+	exitcode = 0;
+	numwait = 0;
+	pid = id;
+	if(id)
+		parentID = currentThread->pid;
+	else
+		parentID = -1;
+	thread = NULL;
+}
+
+PCB::~PCB() {
+    delete joinsem;
+    delete exitsem;
+    delete mutex; 
+	thread->FreeSpace();
+	thread->Finish();
+}
+
+int PCB::Exec(char *filename, int pID) {
+	mutex->P();
+	
+	thread = new Thread(filename);
+	if(this->thread == NULL){
+		printf("\nPCB::Exec:: Not enough memory..!\n");
+        	multex->V();
+		return -1;
 	}
-}
-int PCB::GetID(){ return this->thread->processID; }
-int PCB::GetNumWait() { return this->numwait; }
-int PCB::GetExitCode() { return this->exitcode; }
+	if (filename == NULL || pID < 0) {
+		printf("\nError: File name is null or id is unvalid...\n");
+        mutex->V();
+        return -1;
+    }
 
-void PCB::SetExitCode(int ec){ this->exitcode = ec; }
-
-// Process tranlation to block
-// Wait for JoinRelease to continue exec
-void PCB::JoinWait()
-{
-	//Gọi joinsem->P() để tiến trình chuyển sang trạng thái block và ngừng lại, chờ JoinRelease để thực hiện tiếp.
-    joinsem->P();
-}
-
-// JoinRelease process calling JoinWait
-void PCB::JoinRelease()
-{ 
-	// Gọi joinsem->V() để giải phóng tiến trình gọi JoinWait().
-    joinsem->V();
-}
-
-// Let process tranlation to block state
-// Waiting for ExitRelease to continue exec
-void PCB::ExitWait()
-{ 
-	// Gọi exitsem-->V() để tiến trình chuyển sang trạng thái block và ngừng lại, chờ ExitReleaseđể thực hiện tiếp.
-    exitsem->P();
+	thread->pid = pID;
+	pid = pID;
+	parentID = currentThread->pid;
+	
+	OpenFile *execution = fileSystem->Open(filename);
+	AddrSpace* space = new AddrSpace(execution);
+	
+	if(space == NULL) {
+		printf("\nError: Not enough space...\n");
+		mutex->V();
+		return -1; 
+	}
+	delete executable;
+	delete space;
+	
+	// cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó
+	thread->Fork(StartProcess_2, pID);
+	mutex->V();
+	return pID;
 }
 
-// Release wating process
-void PCB::ExitRelease() 
-{
-	// Gọi exitsem-->V() để giải phóng tiến trình đang chờ.
-    exitsem->V();
+int PCB::GetID() {
+	//return pid;
+	return thread->pid;
 }
 
-void PCB::IncNumWait()
-{
+int PCB::GetNumWait() {
+	return numwait;
+}
+
+
+void PCB::JoinWait() {
+	joinsem->P();
+}
+
+void PCB::ExitWait() {
+	exitsem->P();
+}
+
+void PCB::JoinRelease() {
+	joinsem->V();
+}
+
+void PCB::ExitRelease() {
+	exitsem->V();
+}
+
+void PCB::IncNumWait() {
 	multex->P();
 	++numwait;
 	multex->V();
 }
 
-void PCB::DecNumWait()
-{
+void PCB::DecNumWait() {
 	multex->P();
 	if(numwait > 0)
 		--numwait;
 	multex->V();
 }
 
-void PCB::SetFileName(char* fn){ strcpy(FileName,fn);}
-char* PCB::GetFileName() { return this->FileName; }
+int PCB::GetExitCode() {
+	return exitcode;	
+}
 
-int PCB::Exec(char* filename, int id)
-{  
-    // Gọi mutex->P(); để giúp tránh tình trạng nạp 2 tiến trình cùng 1 lúc.
-	multex->P();
+void PCB::SetExitCode(int ec) {
+	exitcode = ec;
+}
+void PCB::SetFileName(char* fn){ 
+	strcpy(fileName,fn);
+}
+char* PCB::GetFileName() {
+	return fileName;
+}
 
-    // Kiểm tra thread đã khởi tạo thành công chưa, nếu chưa thì báo lỗi là không đủ bộ nhớ, gọi mutex->V() và return.             
-	this->thread = new Thread(filename);
+/*************************************************************************************/
+void StartProcess_2(int) {
+	currentThread->space->InitRegisters();		// set the initial register values
+	currentThread->space->RestoreState();		// load page table register
 
-	if(this->thread == NULL){
-		printf("\nPCB::Exec:: Not enough memory..!\n");
-        	multex->V();
-		return -1;
-	}
-
-	//  Đặt processID của thread này là id.
-	this->thread->processID = id;
-	// Đặt parrentID của thread này là processID của thread gọi thực thi Exec
-	this->parentID = currentThread->processID;
-	// Gọi thực thi Fork(StartProcess_2,id) => Ta cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó.
- 	this->thread->Fork(StartProcess_2,id);
-
-    	multex->V();
-	// Trả về id.
-	return id;
-
+	machine->Run();			// jump to the user progam
+	ASSERT(FALSE);			// machine->Run never returns;
+							// the address space exits
+							// by doing the syscall "exit"
 }
