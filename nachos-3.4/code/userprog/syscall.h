@@ -30,6 +30,10 @@
 #define SC_Fork		9
 #define SC_Yield	10
 #define SC_Seek     11
+#define SC_Str2Int  12
+#define SC_Int2Str  13
+#define SC_Writeln  14
+#define SC_Readln   15
 
 #ifndef IN_ASM
 
@@ -126,6 +130,17 @@ void Fork(void (*func)());
 void Yield();
 
 int Seek(int pos, OpenFileId id);
+
+/* String to integer
+ * Integer to string
+ */
+int Str2Int(char* str);
+
+int Int2Str(char* addr, int dec);
+
+void Writeln(char* addr);
+
+int Readln(char* addr);
 
 #endif /* IN_ASM */
 

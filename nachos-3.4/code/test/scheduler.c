@@ -3,6 +3,7 @@
 int main()
 {
     OpenFileId stdout = ConsoleOutput;
+    Writeln("Wait!");
     Exec("./test/ping");
     // @FIXME :((
     Exec("./test/pong");

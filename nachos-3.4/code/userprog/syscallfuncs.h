@@ -1,57 +1,22 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#include "pcb.h"
 
 #define MAX_FILE_LENGTH 256
 
-void __StartProcess(int addr)
-{
-    printf("Address: %d\n", addr);
-    char* filename = machine->User2System(addr, MAX_FILE_LENGTH);
-    OpenFile *executable = fileSystem->Open(filename);
-    AddrSpace *space;
-
-    printf("Execute %s\n", filename);
-
-    if (executable == NULL) {
-	    printf("Unable to open file %s\n", filename);
-        delete filename;
-	    ASSERT(FALSE);
-    }
-
-    delete filename;
-
-    space = new AddrSpace(executable);    
-    currentThread->space = space;
-
-    delete executable;			// close file
-
-    space->InitRegisters();		// set the initial register values
-    space->RestoreState();		// load page table register
-
-    machine->Run();			// jump to the user progam
-    ASSERT(FALSE);			// machine->Run never returns;
-					// the address space exits
-					// by doing the syscall "exit"
-}
-
 void SCF_Exit()
 {
+    printf("\nExit %d!\n", machine->ReadRegister(4));
 }
 
 int SCF_Exec()
 {
-    static int id = 0;
-    char sid[3];
     int addr = machine->ReadRegister(4);
-
-    sid[0] = (id / 10) + '0';
-    sid[1] = (id % 10) + '0';
-    sid[2] = 0;
-
-    __StartProcess(addr);
-
-    return id++;
+    char* filename = machine->User2System(addr, MAX_FILE_LENGTH);
+    int id = gPTable->ExecUpdate(filename);
+    delete filename;
+    return id;
 }
 
 int SCF_Create()
@@ -100,13 +65,11 @@ int SCF_Read()
     int addr = machine->ReadRegister(4);
     int numBytes = machine->ReadRegister(5);
     int fileid = machine->ReadRegister(6);
-    char *buffer = new char[numBytes];
+    char buffer[numBytes];
     
     int count = gFTable->Read(buffer, numBytes, fileid);
 
     machine->System2User(addr, buffer, numBytes);
-
-    //printf("Read: %s\n", buffer);
 
     return count;
 }
@@ -137,3 +100,43 @@ void SCF_Close()
     int fileid = machine->ReadRegister(4);
     gFTable->Close(fileid);
 }
+
+int SCF_Int2Str()
+{
+    int addr = machine->ReadRegister(4);
+    int dec = machine->ReadRegister(5);
+    char buff[1024];
+    sprintf(buff, "%d", dec);
+    machine->System2User(addr, buff, 1024);
+    return addr;
+}
+
+int SCF_Str2Int()
+{
+    int addr = machine->ReadRegister(4);
+    char* buff = machine->User2System(addr, 1024);
+    //printf("%d\n", atoi(buff));
+    return atoi(buff);
+}
+
+void SCF_Writeln()
+{
+    int addr = machine->ReadRegister(4);
+    char* buffer = machine->User2System(addr, 1024);
+    gFTable->Write(buffer, strlen(buffer), 1);
+    gFTable->Write("\n", 1, 1);
+}
+
+// @FIXME
+int SCF_Readln()
+{
+    int addr = machine->ReadRegister(4);
+    char buffer[1024];
+    
+    int count = gFTable->Read(buffer, 1024, 0);
+
+    machine->System2User(addr, buffer, 1024);
+
+    return count;
+}
+

@@ -8,4 +8,6 @@ int main()
     {
         Write("A", 1, stdout);
     }
+
+    return 1;
 }

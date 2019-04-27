@@ -86,7 +86,12 @@ class Thread {
 					// NOTE -- thread being deleted
 					// must not be running when delete 
 					// is called
-
+    int processID;
+    int exitStatus;
+    void FreeSpace(){
+        if (space != 0)
+            delete space;
+    }
     // basic thread operations
 
     void Fork(VoidFunctionPtr func, int arg); 	// Make thread run (*func)(arg)
@@ -127,6 +132,7 @@ class Thread {
     void RestoreUserState();		// restore user-level register state
 
     AddrSpace *space;			// User code this thread is running.
+    int ID;
 #endif
 };
 

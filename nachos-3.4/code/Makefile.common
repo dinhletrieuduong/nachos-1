@@ -50,6 +50,8 @@ THREAD_H =../threads/copyright.h\
 	../machine/timer.h\
 	../threads/synchcons.h\
 	../threads/ftable.h\
+	../threads/pcb.h\
+	../threads/ptable.h\
 	../filesys/openfileint.h
 
 THREAD_C =../threads/main.cc\
@@ -66,12 +68,14 @@ THREAD_C =../threads/main.cc\
 	../machine/stats.cc\
 	../machine/timer.cc\
 	../threads/synchcons.cc\
-	../threads/ftable.cc
+	../threads/ftable.cc\
+	../threads/pcb.cc\
+	../threads/ptable.cc
 
 THREAD_S = ../threads/switch.s
 
 THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
-	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o synchcons.o ftable.o
+	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o synchcons.o ftable.o pcb.o ptable.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/bitmap.h\
@@ -81,6 +85,7 @@ USERPROG_H = ../userprog/addrspace.h\
 	../machine/machine.h\
 	../machine/mipssim.h\
 	../machine/translate.h
+	
 
 USERPROG_C = ../userprog/addrspace.cc\
 	../userprog/bitmap.cc\
@@ -89,7 +94,7 @@ USERPROG_C = ../userprog/addrspace.cc\
 	../machine/console.cc\
 	../machine/machine.cc\
 	../machine/mipssim.cc\
-	../machine/translate.cc
+	../machine/translate.cc\
 
 USERPROG_O = addrspace.o bitmap.o exception.o progtest.o console.o machine.o \
 	mipssim.o translate.o

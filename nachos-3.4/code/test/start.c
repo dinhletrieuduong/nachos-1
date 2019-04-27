@@ -129,7 +129,7 @@ Yield:
 	syscall
 	j	$31
 	.end Yield
-
+	
 	.globl Seek
 	.ent	Seek
 Seek:
@@ -137,6 +137,39 @@ Seek:
 	syscall
 	j	$31
 	.end Seek
+
+	.globl Str2Int
+	.ent	Str2Int
+Str2Int:
+	addiu $2,$0,SC_Str2Int
+	syscall
+	j	$31
+	.end Str2Int
+
+	.globl Int2Str
+	.ent	Int2Str
+Int2Str:
+	addiu $2,$0,SC_Int2Str
+	syscall
+	j	$31
+	.end Int2Str
+
+	.globl Writeln
+	.ent	Writeln
+Writeln:
+	addiu $2,$0,SC_Writeln
+	syscall
+	j	$31
+	.end Writeln
+
+	.globl Readln
+	.ent	Readln
+Readln:
+	addiu $2,$0,SC_Readln
+	syscall
+	j	$31
+	.end Readln
+
 
 /* dummy function to keep gcc happy */
         .globl  __main

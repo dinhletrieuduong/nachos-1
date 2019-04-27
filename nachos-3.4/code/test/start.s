@@ -138,6 +138,22 @@ Seek:
 	j	$31
 	.end Seek
 
+	.globl Str2Int
+	.ent	Str2Int
+Str2Int:
+	addiu $2,$0,SC_Str2Int
+	syscall
+	j	$31
+	.end Str2Int
+
+	.globl Int2Str
+	.ent	Int2Str
+Int2Str:
+	addiu $2,$0,SC_Int2Str
+	syscall
+	j	$31
+	.end Int2Str
+
 
 /* dummy function to keep gcc happy */
         .globl  __main
