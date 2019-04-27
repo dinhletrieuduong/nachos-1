@@ -157,9 +157,8 @@ Initialize(int argc, char **argv)
     //gSynchConsole = new SynchConsole();
     gFTable = new FTable(10);
     gPTable = new PTable();
-    gPhysPageBitMap = new BitMap(NumPhysPages);
     addrLock = new Semaphore("addrLock", 1);
-
+    gPhysPageBitMap = new BitMap(NumPhysPages);
 #endif
 
 #ifdef FILESYS
@@ -193,6 +192,8 @@ Cleanup()
     delete gFTable;
     delete gPTable;
     delete gPhysPageBitMap;
+    delete gFTable;
+    delete addrLock;
 #endif
 
 #ifdef FILESYS_NEEDED
