@@ -75,17 +75,9 @@ SyscallHandler()
             SCF_Write();
             break;
 
-        case SC_Writeln:
-            SCF_Writeln();
-            break;
-
         case SC_Read:
             // @FIXME: read from console
             machine->WriteRegister(2, SCF_Read());
-            break;
-
-        case SC_Readln:
-            machine->WriteRegister(2, SCF_Readln());
             break;
 
         case SC_Seek:
@@ -101,18 +93,26 @@ SyscallHandler()
             break;
 
         case SC_Join:
+            machine->WriteRegister(2, SCF_Join());
             break;
 
         case SC_Exit:
-            SCF_Exit();
-            break;
-        case SC_Str2Int:
-            machine->WriteRegister(2, SCF_Str2Int());
+            machine->WriteRegister(2, SCF_Exit());
+            //currentThread->FreeSpace();
+            currentThread->Finish();
             break;
 
-        case SC_Int2Str:
-            machine->WriteRegister(2, SCF_Int2Str());
+        case SC_CreateSemaphore:
+            machine->WriteRegister(2, SCF_CreateSemaphore());
             break;
+
+        case SC_Up:
+            machine->WriteRegister(2, SCF_Up());
+            break;
+        case SC_Down:
+            machine->WriteRegister(2, SCF_Down());
+            break;
+            
         default:
             printf("Syscall %d not found\n", type);
             ASSERT(FALSE);

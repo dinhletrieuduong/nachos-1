@@ -23,8 +23,8 @@ PCB::~PCB() {
     delete joinsem;
     delete exitsem;
     delete mutex; 
-	thread->FreeSpace();
-	thread->Finish();
+	//thread->FreeSpace();
+	//thread->Finish();
 }
 
 int PCB::Exec(char *filename, int pID) {
@@ -33,7 +33,7 @@ int PCB::Exec(char *filename, int pID) {
 	thread = new Thread(filename);
 	if(this->thread == NULL){
 		printf("\nPCB::Exec:: Not enough memory..!\n");
-        	multex->V();
+        	mutex->V();
 		return -1;
 	}
 	if (filename == NULL || pID < 0) {
@@ -54,7 +54,7 @@ int PCB::Exec(char *filename, int pID) {
 		mutex->V();
 		return -1; 
 	}
-	delete executable;
+	delete execution;
 	delete space;
 	
 	// cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó
@@ -90,16 +90,16 @@ void PCB::ExitRelease() {
 }
 
 void PCB::IncNumWait() {
-	multex->P();
+	mutex->P();
 	++numwait;
-	multex->V();
+	mutex->V();
 }
 
 void PCB::DecNumWait() {
-	multex->P();
+	mutex->P();
 	if(numwait > 0)
 		--numwait;
-	multex->V();
+	mutex->V();
 }
 
 int PCB::GetExitCode() {
