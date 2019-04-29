@@ -88,7 +88,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 						// at least until we have
 						// virtual memory
 
-    if(numPages > gBitMapPhysPage->NumClear())
+    if(numPages > gPhysPageBitMap->NumClear())
     {
       printf("\nAddrSpace::Load : not enough memory for new process..!");
       numPages = 0;
@@ -104,7 +104,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
     	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
     	// pageTable[i].physicalPage = i + totalPagesCount;
-      pageTable[i].physicalPage = gBitMapPhysPage->Find();
+      pageTable[i].physicalPage = gPhysPageBitMap->Find();
     	pageTable[i].valid = TRUE;
     	pageTable[i].use = FALSE;
     	pageTable[i].dirty = FALSE;
