@@ -12,8 +12,8 @@ PCB::PCB(int id) {
 	exitcode = 0;
 	numwait = 0;
 	pid = id;
-	if(id)
-		parentID = currentThread->pid;
+	if(id >= 0)
+		parentID = currentThread->processID;
 	else
 		parentID = -1;
 	thread = NULL;
@@ -23,30 +23,30 @@ PCB::~PCB() {
     delete joinsem;
     delete exitsem;
     delete mutex; 
-	//thread->FreeSpace();
-	//thread->Finish();
+	thread->FreeSpace();
+	thread->Finish();
 }
 
 int PCB::Exec(char *filename, int pID) {
 	mutex->P();
 	
 	thread = new Thread(filename);
-	if(this->thread == NULL){
-		printf("\nPCB::Exec:: Not enough memory..!\n");
-        	mutex->V();
+	if(thread == NULL){
+		printf("\nError: Not enough memory..!\n");
+        mutex->V();
 		return -1;
 	}
 	if (filename == NULL || pID < 0) {
-		printf("\nError: File name is null or id is unvalid...\n");
+		printf("\nError: File name or id is unvalid...\n");
         mutex->V();
         return -1;
     }
 
-	thread->pid = pID;
+	thread->processID = pID;
 	pid = pID;
-	parentID = currentThread->pid;
+	parentID = currentThread->processID;
 	
-	OpenFile *execution = fileSystem->Open(filename);
+	/*OpenFile *execution = fileSystem->Open(filename);
 	AddrSpace* space = new AddrSpace(execution);
 	
 	if(space == NULL) {
@@ -55,7 +55,7 @@ int PCB::Exec(char *filename, int pID) {
 		return -1; 
 	}
 	delete execution;
-	delete space;
+	delete space;*/
 	
 	// cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó
 	thread->Fork(StartProcess_2, pID);
@@ -64,14 +64,12 @@ int PCB::Exec(char *filename, int pID) {
 }
 
 int PCB::GetID() {
-	//return pid;
-	return thread->pid;
+	return pid;
 }
 
 int PCB::GetNumWait() {
 	return numwait;
 }
-
 
 void PCB::JoinWait() {
 	joinsem->P();
