@@ -35,6 +35,9 @@
 #define SC_Writeln  14
 #define SC_Readln   15
 
+#define SC_CreateSemaphore 16
+
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -68,7 +71,7 @@ SpaceId Exec(char *name);
  * Return the exit status.
  */
 int Join(SpaceId id); 	
- 
+
 
 /* File system operations: Create, Open, Read, Write, Close
  * These functions are patterned after UNIX -- files represent
@@ -141,6 +144,8 @@ int Int2Str(char* addr, int dec);
 void Writeln(char* addr);
 
 int Readln(char* addr);
+
+int CreateSemaphore(char* name, int semval);
 
 #endif /* IN_ASM */
 
