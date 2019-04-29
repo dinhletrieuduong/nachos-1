@@ -7,7 +7,13 @@
 
 void SCF_Exit()
 {
-    printf("\nExit %d!\n", machine->ReadRegister(4));
+    int exit = machine->ReadRegister(4);
+	int res = gPTable->ExitUpdate(exit);
+
+    printf("\nExit %d!\n", exit);
+    machine->WriteRegister(2, res);
+    currentThread->FreeSpace();
+	currentThread->Finish();
 }
 
 int SCF_Exec()
@@ -140,3 +146,30 @@ int SCF_Readln()
     return count;
 }
 
+int SCF_Join() {
+    int id = machine->ReadRegister(4);
+	int res = gPTable->JoinUpdate(id);
+    return res;
+}
+
+int SCF_CreateSemaphore() {
+	int virtAddr = machine->ReadRegister(4);
+	int semval = machine->ReadRegister(5);
+
+	char *name = machine->User2System(virtAddr, MAX_FILE_LENGTH);
+	if(name == NULL)
+	{
+		delete[] name;
+		return -1;
+	}
+	
+	int res = semTab->Create(name, semval);
+	if(res == -1)
+	{
+		delete[] name;
+		return -1;				
+	}
+			
+	delete[] name;
+    return res;
+}
