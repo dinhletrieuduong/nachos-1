@@ -2,10 +2,6 @@
 #include "system.h"
 
 PTable::PTable(int size) {
-	if (size < 0)
-        return;
-
-	psize = MAX_PROCESS;
 	bm = new BitMap(size);
 	bmsem = new Semaphore("bmsem", 1);
 
@@ -13,9 +9,6 @@ PTable::PTable(int size) {
 		pcb[i] = NULL;
 	bm->Mark(0);
 
-pcb[0] = new PCB(0);
-	pcb[0]->SetFileName("./test/scheduler");
-	pcb[0]->parentID = -1;
 	// pcb[0] = new PCB(0);
 	// pcb[0]->SetFileName("./test/scheduler");
 	// pcb[0]->parentID = -1;
@@ -46,28 +39,28 @@ int PTable::ExecUpdate(char *filename) {
 		bmsem->V();
 		return -1;
 	}
-	delete execution; // close file
+	delete execution; // close
 
 	//Kiem tra chuong trinh duoc goi co la chinh no khong
-	if (!strcmp(filename, currentThread->getName())) {
+	if (strcmp(filename, currentThread->getName()) == 0) {
 		printf("\nError: Process tries to execute itself\n");
 		bmsem->V();
 		return -1;
 	}
 
 	//Kiem tra con slot trong khong
-	int ID = GetFreeSlot();
-	if (ID == -1) {
+	int id = GetFreeSlot();
+	if (id < 0) {
 		printf("\nError: No more space for new process\n");
 		bmsem->V();
 		return -1;
 	}
 
-	pcb[ID] = new PCB(ID);
-	bm->Mark(ID);
-	pcb[ID]->SetFileName(filename);
-    pcb[ID]->parentID = currentThread->pid;
-	int pID = pcb[ID]->Exec(filename, ID);
+	pcb[id] = new PCB(id);
+	bm->Mark(id);
+	pcb[id]->SetFileName(filename);
+    pcb[id]->parentID = currentThread->processID;
+	int pID = pcb[id]->Exec(filename, id);
 
 	bmsem->V();
 	return pID;
@@ -75,15 +68,16 @@ int PTable::ExecUpdate(char *filename) {
 
 int PTable::ExitUpdate(int ec) {
 	//Kiem tra pID co ton tai khong
-	int pID = currentThread->pid;
-	if (!IsExist(pID)) {
+	int pID = currentThread->processID;
+	if (IsExist(pID) == 0) {
 		printf("\nError: Unavailable process\n");
 		return -1;
 	}
-
 	//Neu la main process thi Halt()
 	if (pID == 0) {
+    	currentThread->FreeSpace();	
 		interrupt->Halt();
+    	currentThread->Finish();
 		return 0;
 	}
 
@@ -110,7 +104,7 @@ int PTable::JoinUpdate(int pID) {
 	}
 
 	//kiem tra tien trinh dang chay co la cha cua tien trinh can join hay khong
-	if (currentThread->pid != pcb[pID]->parentID) {
+	if (currentThread->processID != pcb[pID]->parentID) {
 		printf("\nError: Process tries to join not parent process\n");
 		return -1;
 	}
@@ -133,10 +127,13 @@ int PTable::JoinUpdate(int pID) {
 void PTable::Remove(int pID) {
 	if (pID < 0 || pID > 9)
 		return;
-	if (bm->Test(pID)) {
+	/*if (bm->Test(pID)) {
 		bm->Clear(pID);
 		delete pcb[pID];
-	}
+	}*/
+    bm->Clear(pID);
+	if(pcb[pID] != 0)
+		delete pcb[pID];
 }
 
 int PTable::GetFreeSlot() {
@@ -150,6 +147,6 @@ bool PTable::IsExist(int pID) {
 }
 
 char *PTable::GetFileName(int pID) {
-	if (pID >= 0 && pID < 10 && bm->Test(pID))
+	//if (pID >= 0 && pID < 10 && bm->Test(pID))
 		return pcb[pID]->GetFileName();
 }
