@@ -34,6 +34,7 @@ FTable* gFTable;
 PTable* gPTable;
 BitMap *gPhysPageBitMap;
 Semaphore* addrLock;
+STable *semTab;		// quan ly semaphore
 #endif
 
 #ifdef NETWORK
@@ -156,9 +157,10 @@ Initialize(int argc, char **argv)
     machine = new Machine(debugUserProg);	// this must come first
     //gSynchConsole = new SynchConsole();
     gFTable = new FTable(10);
-    gPTable = new PTable();
+    gPTable = new PTable(10);
     addrLock = new Semaphore("addrLock", 1);
-    gPhysPageBitMap = new BitMap(NumPhysPages);
+    gPhysPageBitMap = new BitMap(NumPhysPages);    
+    semTab = new STable();
 #endif
 
 #ifdef FILESYS
@@ -192,8 +194,8 @@ Cleanup()
     delete gFTable;
     delete gPTable;
     delete gPhysPageBitMap;
-    delete gFTable;
     delete addrLock;
+    delete semTab;
 #endif
 
 #ifdef FILESYS_NEEDED
