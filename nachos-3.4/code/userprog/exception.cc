@@ -87,7 +87,11 @@ SyscallHandler()
         case SC_Close:
             SCF_Close();
             break;
-
+            
+        case SC_Writeln:
+            SCF_Writeln();
+            break;
+            
         case SC_Exec:
             machine->WriteRegister(2, SCF_Exec());
             break;
@@ -97,28 +101,26 @@ SyscallHandler()
             break;
 
         case SC_Exit:
-            machine->WriteRegister(2, SCF_Exit());
-            //currentThread->FreeSpace();
-            currentThread->Finish();
+            //machine->WriteRegister(2, SCF_Exit());
+            SCF_Exit();
             break;
 
         case SC_CreateSemaphore:
             machine->WriteRegister(2, SCF_CreateSemaphore());
             break;
 
-        case SC_Up:
+        /*case SC_Up:
             machine->WriteRegister(2, SCF_Up());
             break;
         case SC_Down:
             machine->WriteRegister(2, SCF_Down());
-            break;
-            
+            break;*/
+
         default:
             printf("Syscall %d not found\n", type);
             ASSERT(FALSE);
             break;
     }
-
     // printf("Syscall was called %d\n", type);
     // printf("Increase PC Register\n");
     machine->registers[PrevPCReg] = machine->registers[PCReg];
@@ -131,7 +133,6 @@ ExceptionHandler(ExceptionType which)
 {
     switch (which)
     {
-
     case SyscallException:
         SyscallHandler();
         break;
@@ -156,6 +157,8 @@ ExceptionHandler(ExceptionType which)
 
     case NumExceptionTypes:
         break;
+
+
 
     default:
         printf("Unexpected user mode exception %d\n", which);
