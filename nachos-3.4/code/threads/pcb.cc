@@ -10,12 +10,12 @@ PCB::PCB(int id) {
 	mutex = new Semaphore("Mutex",1);
 	
 	exitcode = 0;
-	numwait = 0;
+    numwait = 0;
 	pid = id;
-	if(id >= 0)
-		parentID = currentThread->processID;
-	else
+	if(id == 0)
 		parentID = -1;
+	else
+		parentID = currentThread->processID;
 	thread = NULL;
 }
 
@@ -23,8 +23,11 @@ PCB::~PCB() {
     delete joinsem;
     delete exitsem;
     delete mutex; 
-	thread->FreeSpace();
-	thread->Finish();
+	if(thread != NULL)
+	{		
+		thread->FreeSpace();
+		thread->Finish();
+	}
 }
 
 int PCB::Exec(char *filename, int pID) {
@@ -41,12 +44,7 @@ int PCB::Exec(char *filename, int pID) {
         mutex->V();
         return -1;
     }
-
-	thread->processID = pID;
-	pid = pID;
-	parentID = currentThread->processID;
-	
-	/*OpenFile *execution = fileSystem->Open(filename);
+    /*OpenFile *execution = fileSystem->Open(filename);
 	AddrSpace* space = new AddrSpace(execution);
 	
 	if(space == NULL) {
@@ -54,9 +52,12 @@ int PCB::Exec(char *filename, int pID) {
 		mutex->V();
 		return -1; 
 	}
-	delete execution;
-	delete space;*/
-	
+    delete space;
+	delete execution;*/
+
+	thread->processID = pID;
+	pid = pID;
+	parentID = currentThread->processID;
 	// cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó
 	thread->Fork(StartProcess_2, pID);
 	mutex->V();
@@ -115,12 +116,36 @@ char* PCB::GetFileName() {
 }
 
 /*************************************************************************************/
-void StartProcess_2(int) {
-	currentThread->space->InitRegisters();		// set the initial register values
-	currentThread->space->RestoreState();		// load page table register
+void StartProcess_2(int id) {
+    char* fileName = gPTable->GetFileName(id);
+    OpenFile *executable = fileSystem->Open(fileName);
 
+    if (executable == NULL) {
+	    printf("\nUnable to open file %s\n", fileName);
+	    return;
+    }
+    AddrSpace *space;
+    space = new AddrSpace(executable);
+    //space = new AddrSpace(fileName);
+
+	if(space == NULL)
+	{
+		printf("\nCan't create AddSpace.\n");
+		return;
+	}
+
+    currentThread->space = space;
+
+    space->InitRegisters();		
+    space->RestoreState();		
+
+    currentThread->space->InitRegisters();		// set the initial register values
+	currentThread->space->RestoreState();		// load page table register
+    
 	machine->Run();			// jump to the user progam
+delete space;
 	ASSERT(FALSE);			// machine->Run never returns;
 							// the address space exits
 							// by doing the syscall "exit"
+
 }
