@@ -3,10 +3,12 @@
 int main()
 {
     OpenFileId stdout = ConsoleOutput;
-    Writeln("Wait!");
-    Exec("./test/ping");
-    // @FIXME :((
-    Exec("./test/pong");
-    while(1);
+    int ping;
+    int pong;
+    Writeln("Pingpong...");
+    ping = Exec("./test/ping");
+    pong = Exec("./test/pong");
+    Join(ping);
+    Join(pong);
     return 0;
 }

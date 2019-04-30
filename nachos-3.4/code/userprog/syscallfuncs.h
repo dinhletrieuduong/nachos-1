@@ -5,15 +5,16 @@
 
 #define MAX_FILE_LENGTH 256
 
-void SCF_Exit()
+int SCF_Exit()
 {
     int exit = machine->ReadRegister(4);
 	int res = gPTable->ExitUpdate(exit);
-
     printf("\nExit %d!\n", exit);
-    machine->WriteRegister(2, res);
+    // Mot la free o day
+    // Hai la free trong pcb, free 2 cho o dau cho mai free quai` di.
     currentThread->FreeSpace();
-	currentThread->Finish();
+    currentThread->Finish();
+    return res;
 }
 
 int SCF_Exec()

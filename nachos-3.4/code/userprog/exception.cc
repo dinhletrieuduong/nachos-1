@@ -101,8 +101,7 @@ SyscallHandler()
             break;
 
         case SC_Exit:
-            //machine->WriteRegister(2, SCF_Exit());
-            SCF_Exit();
+            machine->WriteRegister(2, SCF_Exit());
             break;
 
         case SC_CreateSemaphore:

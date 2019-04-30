@@ -20,14 +20,11 @@ PCB::PCB(int id) {
 }
 
 PCB::~PCB() {
+	printf("PCB::~PCB, free space\n");
+	// thread->FreeSpace();
     delete joinsem;
     delete exitsem;
-    delete mutex; 
-	if(thread != NULL)
-	{		
-		thread->FreeSpace();
-		thread->Finish();
-	}
+    delete mutex;
 }
 
 int PCB::Exec(char *filename, int pID) {
