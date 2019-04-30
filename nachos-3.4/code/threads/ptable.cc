@@ -15,8 +15,8 @@ PTable::PTable(int size) {
 }
 
 PTable::~PTable() {
-	delete bm;
-    delete bmsem;
+	if (bm != NULL) delete bm;
+    if (bmsem != NULL) delete bmsem;
     for (int i = 0; i < MAX_PROCESS; ++i) {
         if (pcb[i] != NULL) 
         	delete pcb[i];
@@ -66,19 +66,45 @@ int PTable::ExecUpdate(char *filename) {
 	return pID;
 }
 
-int PTable::ExitUpdate(int ec) {
-	//Kiem tra pID co ton tai khong
-	int pID = currentThread->processID;
-	if (IsExist(pID) == 0) {
+int PTable::JoinUpdate(int pID) {
+	// Ta kiểm tra tính hợp lệ của processID id và kiểm tra tiến trình gọi Join có phải là cha của tiến trình
+	// có processID là id hay không. Nếu không thỏa, ta báo lỗi hợp lý và trả về -1.
+	if (pID < 0 || pID > 9) {
+		printf("\nError: Unavailable process: id = %d\n", pID);
+		return -1;
+	}
+	if (pcb[pID] == NULL) {
 		printf("\nError: Unavailable process\n");
 		return -1;
 	}
+
+	//kiem tra tien trinh dang chay co la cha cua tien trinh can join hay khong
+	if (currentThread->processID != pcb[pID]->parentID) {
+		printf("\nError: Process tries to join not parent process\n");
+		return -1;
+	}
+	// Tăng numwait và gọi JoinWait() để chờ tiến trình con thực hiện. Sau khi tiến trình con thực hiện xong, tiến trình đã được giải phóng
+	pcb[pcb[pID]->parentID]->IncNumWait();
+	pcb[pID]->JoinWait(); //doi den khi tien trinh con ket thuc
+	int ec = pcb[pID]->GetExitCode();
+	pcb[pID]->ExitRelease(); //cho phep tien trinh con ket thuc
+	return ec;
+}
+
+int PTable::ExitUpdate(int ec) {
+	int pID = currentThread->processID;
+
 	//Neu la main process thi Halt()
 	if (pID == 0) {
     	currentThread->FreeSpace();	
 		interrupt->Halt();
     	currentThread->Finish();
 		return 0;
+	}
+    
+	if (IsExist(pID) == false) {
+		printf("\nError: Unavailable process\n");
+		return -1;
 	}
 
 	pcb[pID]->SetExitCode(ec);
@@ -90,47 +116,9 @@ int PTable::ExitUpdate(int ec) {
 	return ec;
 }
 
-int PTable::JoinUpdate(int pID) {
-	// Ta kiểm tra tính hợp lệ của processID id và kiểm tra tiến trình gọi Join có phải là cha của tiến trình
-	// có processID là id hay không. Nếu không thỏa, ta báo lỗi hợp lý và trả về -1.
-	if (pID <= 0 || pID > 9) {
-		printf("\nError: Unavailable process: id = %d\n", pID);
-		return -1;
-	}
-
-	if (pcb[pID] == NULL) {
-		printf("\nError: Unavailable process");
-		return -1;
-	}
-
-	//kiem tra tien trinh dang chay co la cha cua tien trinh can join hay khong
-	if (currentThread->processID != pcb[pID]->parentID) {
-		printf("\nError: Process tries to join not parent process\n");
-		return -1;
-	}
-	// Tăng numwait và gọi JoinWait() để chờ tiến trình con thực hiện.
-	// Sau khi tiến trình con thực hiện xong, tiến trình đã được giải phóng
-	pcb[pcb[pID]->parentID]->IncNumWait();
-	pcb[pID]->JoinWait(); //doi den khi tien trinh con ket thuc
-
-	int ec = pcb[pID]->GetExitCode();
-
-	if (ec != 0) {
-		printf("\nProcess exit with exitcode EC = %d ", ec);
-		return -1;
-	}
-
-	pcb[pID]->ExitRelease(); //cho phep tien trinh con ket thuc
-	return 0;
-}
-
 void PTable::Remove(int pID) {
-	if (pID < 0 || pID > 9)
-		return;
-	/*if (bm->Test(pID)) {
-		bm->Clear(pID);
-		delete pcb[pID];
-	}*/
+	/*if (pID < 0 || pID > 9)
+		return;*/
     bm->Clear(pID);
 	if(pcb[pID] != 0)
 		delete pcb[pID];
@@ -141,8 +129,8 @@ int PTable::GetFreeSlot() {
 }
 
 bool PTable::IsExist(int pID) {
-	if (pID < 0 || pID > 9)
-		return 0;
+	/*if (pID < 0 || pID > 9)
+		return false;*/
 	return bm->Test(pID);
 }
 
