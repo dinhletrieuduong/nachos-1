@@ -34,8 +34,10 @@
 #define SC_Int2Str  13
 #define SC_Writeln  14
 #define SC_Readln   15
-
-#define SC_CreateSemaphore 16
+#define SC_CreateSemaphore \
+                    16
+#define SC_Up       17
+#define SC_Down     18
 
 
 #ifndef IN_ASM
@@ -146,6 +148,10 @@ void Writeln(char* addr);
 int Readln(char* addr);
 
 int CreateSemaphore(char* name, int semval);
+
+int Up(char* name);
+
+int Down(char* name);
 
 #endif /* IN_ASM */
 

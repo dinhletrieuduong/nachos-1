@@ -108,12 +108,13 @@ SyscallHandler()
             machine->WriteRegister(2, SCF_CreateSemaphore());
             break;
 
-        /*case SC_Up:
+        case SC_Up:
             machine->WriteRegister(2, SCF_Up());
             break;
+            
         case SC_Down:
             machine->WriteRegister(2, SCF_Down());
-            break;*/
+            break;
 
         default:
             printf("Syscall %d not found\n", type);

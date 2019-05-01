@@ -46,25 +46,25 @@ class FileSystem {
     FileSystem(bool format) {}
 
     bool Create(char *name, int initialSize) { 
-	int fileDescriptor = OpenForWrite(name);
+		int fileDescriptor = OpenForWrite(name);
 
-	if (fileDescriptor == -1) return FALSE;
-	Close(fileDescriptor); 
-	return TRUE; 
+		if (fileDescriptor == -1) return FALSE;
+		Close(fileDescriptor); 
+		return TRUE; 
 	}
 
     OpenFile* Open(char *name) {
-	  int fileDescriptor = OpenForReadWrite(name, FALSE);
+	    int fileDescriptor = OpenForReadWrite(name, FALSE);
 
-	  if (fileDescriptor == -1) return NULL;
-	  return new OpenFile(fileDescriptor);
+	    if (fileDescriptor == -1) return NULL;
+	    return new OpenFile(fileDescriptor);
     }
 
-		OpenFile* Open(char *name, int type) {
-	  int fileDescriptor = OpenForReadWrite(name, FALSE);
+    OpenFile* Open(char *name, int type) {
+	    int fileDescriptor = OpenForReadWrite(name, FALSE);
 
-	  if (fileDescriptor == -1) return NULL;
-	  return new OpenFile(fileDescriptor);
+	    if (fileDescriptor == -1) return NULL;
+	    return new OpenFile(fileDescriptor);
     }
 
     bool Remove(char *name) { return Unlink(name) == 0; }
@@ -86,7 +86,7 @@ class FileSystem {
 
     OpenFile* Open(char *name); 	// Open a file (UNIX open)
 
-		OpenFile* Open(char *name, int type);
+    OpenFile* Open(char *name, int type);
 
     bool Remove(char *name);  		// Delete a file (UNIX unlink)
 

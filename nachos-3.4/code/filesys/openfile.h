@@ -73,7 +73,6 @@ class OpenFile : public OpenFileInt {
 
     int Length()
 		{
-				int pos = GetCurrentPos();
 				Lseek(file, 0, 2); 
 				int len = Tell(file);
 				Seek(0);

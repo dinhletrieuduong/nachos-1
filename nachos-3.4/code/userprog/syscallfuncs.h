@@ -1,3 +1,6 @@
+#ifndef SYSCALLFUNCS_H
+#define SYSCALLFUNCS_H
+
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
@@ -22,7 +25,7 @@ int SCF_Exec()
     int addr = machine->ReadRegister(4);
     char* filename = machine->User2System(addr, MAX_FILE_LENGTH);
     int id = gPTable->ExecUpdate(filename);
-    delete filename;
+    delete[] filename;
     return id;
 }
 
@@ -34,18 +37,18 @@ int SCF_Create()
     if (filename == NULL)
     {
         printf("Not enough memory!\n");
-        delete filename;
+        delete[] filename;
         return -1;
     }
 
     if (!fileSystem->Create(filename, 0))
     {
         printf("Error while creating file!\n");
-        delete filename;
+        delete[] filename;
         return -1;
     }
 
-    delete filename;
+    delete[] filename;
     return 0;
 }
 
@@ -58,12 +61,12 @@ int SCF_Open()
     if (filename == NULL)
     {
         printf("Not enough memory\n");
-        delete filename;
+        delete[] filename;
         return -1;
     }
 
     int index = gFTable->Open(filename, type);
-    delete filename;
+    delete[] filename;
     return index;
 }
 
@@ -156,8 +159,8 @@ int SCF_Join() {
 int SCF_CreateSemaphore() {
 	int virtAddr = machine->ReadRegister(4);
 	int semval = machine->ReadRegister(5);
-
 	char *name = machine->User2System(virtAddr, MAX_FILE_LENGTH);
+
 	if(name == NULL)
 	{
 		delete[] name;
@@ -165,6 +168,7 @@ int SCF_CreateSemaphore() {
 	}
 	
 	int res = semTab->Create(name, semval);
+	
 	if(res == -1)
 	{
 		delete[] name;
@@ -174,3 +178,47 @@ int SCF_CreateSemaphore() {
 	delete[] name;
     return res;
 }
+
+int SCF_Up() {
+    int virtAddr = machine->ReadRegister(4);
+    char* name = machine->User2System(virtAddr, MAX_FILE_LENGTH);
+    
+    if (name == NULL)
+    {
+        delete[] name;
+        return -1;
+    }
+
+    if (semTab->Signal(name))
+    {
+        printf("Semaphore \'%s\' not found\n", name);
+        delete[] name;
+        return -1;
+    }
+
+    delete[] name;
+    return 0;
+}
+
+int SCF_Down() {
+    int virtAddr = machine->ReadRegister(4);
+    char* name = machine->User2System(virtAddr, MAX_FILE_LENGTH);
+    
+    if (name == NULL)
+    {
+        delete[] name;
+        return -1;
+    }
+
+    if (semTab->Wait(name))
+    {
+        printf("Semaphore \'%s\' not found\n", name);
+        delete[] name;
+        return -1;
+    }
+
+    delete[] name;
+    return 0;
+}
+
+#endif

@@ -20,12 +20,12 @@ void Sem::Delete() {
     delete sem;
     sem = NULL;
 }
-void Sem::wait() {
+void Sem::Wait() {
 	sem->P();
 }
-void Sem::signal() {
+void Sem::Signal() {
 	sem->V();
 }
-char* Sem::getName() {
+char* Sem::GetName() {
 	return name;
 }

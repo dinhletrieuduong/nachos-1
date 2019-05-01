@@ -16,9 +16,9 @@ public:
     ~Sem();					// hủy các đối tượng đã tạo
     int Create(char *name, int semval);    // create a new semaphore. return 0 if success and -1 if failure
     void Delete();                         // delete the semaphore if exist
-    void wait();			// thực hiện thao tác chờ
-    void signal();			// thực hiện thao tác giải phóng Semaphore
-    char* getName();		// Trả về tên của Semaphore
+    void Wait();			// thực hiện thao tác chờ
+    void Signal();			// thực hiện thao tác giải phóng Semaphore
+    char* GetName();		// Trả về tên của Semaphore
 };
 
 #endif

@@ -52,7 +52,9 @@ THREAD_H =../threads/copyright.h\
 	../threads/ftable.h\
 	../threads/pcb.h\
 	../threads/ptable.h\
-	../filesys/openfileint.h
+	../filesys/openfileint.h\
+	../threads/sem.h\
+	../threads/stable.h
 
 THREAD_C =../threads/main.cc\
 	../threads/list.cc\
@@ -70,12 +72,15 @@ THREAD_C =../threads/main.cc\
 	../threads/synchcons.cc\
 	../threads/ftable.cc\
 	../threads/pcb.cc\
-	../threads/ptable.cc
+	../threads/ptable.cc\
+	../threads/sem.cc\
+	../threads/stable.cc
 
 THREAD_S = ../threads/switch.s
 
 THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
-	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o synchcons.o ftable.o ptable.o pcb.o
+	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o\
+	synchcons.o ftable.o ptable.o pcb.o sem.o stable.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/bitmap.h\
