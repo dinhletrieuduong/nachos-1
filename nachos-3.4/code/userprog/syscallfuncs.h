@@ -13,8 +13,6 @@ int SCF_Exit()
     int exit = machine->ReadRegister(4);
 	int res = gPTable->ExitUpdate(exit);
     printf("\nExit %d!\n", exit);
-    // Mot la free o day
-    // Hai la free trong pcb, free 2 cho o dau cho mai free quai` di.
     currentThread->FreeSpace();
     currentThread->Finish();
     return res;
