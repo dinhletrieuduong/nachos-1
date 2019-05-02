@@ -20,8 +20,6 @@ PCB::PCB(int id) {
 }
 
 PCB::~PCB() {
-	printf("PCB::~PCB, free space\n");
-	// thread->FreeSpace();
     delete joinsem;
     delete exitsem;
     delete mutex;
@@ -41,17 +39,6 @@ int PCB::Exec(char *filename, int pID) {
         mutex->V();
         return -1;
     }
-    /*OpenFile *execution = fileSystem->Open(filename);
-	AddrSpace* space = new AddrSpace(execution);
-	
-	if(space == NULL) {
-		printf("\nError: Not enough space...\n");
-		mutex->V();
-		return -1; 
-	}
-    delete space;
-	delete execution;*/
-
 	thread->processID = pID;
 	pid = pID;
 	parentID = currentThread->processID;
@@ -140,7 +127,8 @@ void StartProcess_2(int id) {
 	currentThread->space->RestoreState();		// load page table register
     
 	machine->Run();			// jump to the user progam
-delete space;
+	delete space;
+	delete executable;
 	ASSERT(FALSE);			// machine->Run never returns;
 							// the address space exits
 							// by doing the syscall "exit"
