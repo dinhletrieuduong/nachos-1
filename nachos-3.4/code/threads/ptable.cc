@@ -10,7 +10,6 @@ PTable::PTable(int size) {
 	bm->Mark(0);
 
 	pcb[0] = new PCB(0);
-	// pcb[0]->SetFileName("./test/scheduler");
 	pcb[0]->parentID = -1;
 }
 
@@ -104,29 +103,20 @@ int PTable::ExitUpdate(int ec) {
 		interrupt->Halt();
 		return 0;
 	}
-    
-	printf("1\n");
-
 	if (IsExist(pID) == false) {
 		printf("\nError: Unavailable process\n");
 		return -1;
 	}
-	printf("2\n");
 	printf("P: %d  |  ParentID: %d\n", pcb[pID], pcb[pID]->parentID);
 	pcb[pID]->SetExitCode(ec);
 	pcb[pcb[pID]->parentID]->DecNumWait();
-	printf("3\n");
 	pcb[pID]->JoinRelease();
 	pcb[pID]->ExitWait();
-	printf("4\n");
 	Remove(pID);
-	printf("5\n");
 	return ec;
 }
 
 void PTable::Remove(int pID) {
-	/*if (pID < 0 || pID > 9)
-		return;*/
     bm->Clear(pID);
 	if(pcb[pID] != 0)
 		delete pcb[pID];
@@ -137,12 +127,9 @@ int PTable::GetFreeSlot() {
 }
 
 bool PTable::IsExist(int pID) {
-	/*if (pID < 0 || pID > 9)
-		return false;*/
 	return bm->Test(pID);
 }
 
 char *PTable::GetFileName(int pID) {
-	//if (pID >= 0 && pID < 10 && bm->Test(pID))
-		return pcb[pID]->GetFileName();
+	return pcb[pID]->GetFileName();
 }
