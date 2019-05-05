@@ -76,14 +76,14 @@ AddrSpace::AddrSpace(OpenFile *executable)
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
 			+ UserStackSize;	// we need to increase the size
 						// to leave room for the stack
-    numPages = divRoundUp(size, PageSize);
-    size = numPages * PageSize;
+    numPages = divRoundUp(size, PageSize); // so khung trang can dung, vd kich thuoc 1 khung trang la 2, pagesize 5 -> can 3 khung trang
+    size = numPages * PageSize; // -> size = 6
 
-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
-						// to run anything too big --
-						// at least until we have
-						// virtual memory
-    int numclear = gPhysPageBitMap->NumClear();
+    // ASSERT(numPages <= NumPhysPages);		// check we're not trying
+				// 		// to run anything too big --
+				// 		// at least until we have
+				// 		// virtual memory
+    int numclear = gPhysPageBitMap->NumClear(); // tra ve tong so trang con trong tren Ram
 
     printf("\nSize: %d | numPages: %d | PageSize: %d | Numclear: %d\n\n", size, numPages, PageSize, numclear);  
 
@@ -91,7 +91,6 @@ AddrSpace::AddrSpace(OpenFile *executable)
     {
 	    printf("\nNot enough memory for new process\n");
 	    numPages = 0;
-	    delete executable;
 	    addrLock->V();
         return;
     }
@@ -103,7 +102,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
     	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
     	// pageTable[i].physicalPage = i;
-        pageTable[i].physicalPage = gPhysPageBitMap->Find();
+        pageTable[i].physicalPage = gPhysPageBitMap->Find(); // tim trang con trong va nap vo
     	pageTable[i].valid = TRUE;
     	pageTable[i].use = FALSE;
     	pageTable[i].dirty = FALSE;
@@ -117,10 +116,10 @@ AddrSpace::AddrSpace(OpenFile *executable)
     // and the stack segment
     for (i = 0; i < numPages; i++)
         bzero(&(machine->mainMemory[pageTable[i].physicalPage*PageSize]), PageSize);
-  
-    // then, copy in the code and data segments into memory
-    addrLock->V();
 
+    addrLock->V();
+    // then, copy in the code and data segments into memory
+    // nap cac byte tu file ctrinh thuc thi len vung nho
     if (noffH.code.size > 0) {
       for (i = 0; i < numPages; i++){
         executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]) + pageTable[i].physicalPage * PageSize,
