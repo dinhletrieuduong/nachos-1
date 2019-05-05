@@ -1,11 +1,12 @@
 #include "ftable.h"
+#include "system.h"
 
 FTable::FTable(int numMaxFile)
 {
     mNumMaxFile = numMaxFile;
     mFileTable = new OpenFileInt*[numMaxFile];
     mBitmap = new BitMap(numMaxFile);
-    mFileSystem = new FileSystem(TRUE);
+    mFileSystem = fileSystem;
     
     for (int i = 0; i < mNumMaxFile; ++i)
     {

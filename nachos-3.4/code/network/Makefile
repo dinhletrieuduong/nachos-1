@@ -395,7 +395,15 @@ ftable.o: ../threads/ftable.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../filesys/openfileint.h ../userprog/bitmap.h \
  ../filesys/filesys.h ../filesys/openfile.h ../threads/synchcons.h \
- ../machine/console.h ../filesys/openfileint.h
+ ../machine/console.h ../filesys/openfileint.h ../threads/system.h \
+ ../threads/utility.h ../threads/thread.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+ ../threads/list.h ../machine/stats.h ../machine/timer.h \
+ ../threads/synch.h ../threads/ptable.h ../threads/pcb.h \
+ ../threads/stable.h ../threads/sem.h ../filesys/synchdisk.h \
+ ../machine/disk.h ../threads/synch.h ../network/post.h \
+ ../machine/network.h ../threads/synchlist.h
 pcb.o: ../threads/pcb.cc /usr/include/stdc-predef.h ../threads/pcb.h \
  ../threads/thread.h ../threads/copyright.h ../threads/utility.h \
  ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
