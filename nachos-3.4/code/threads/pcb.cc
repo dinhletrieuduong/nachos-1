@@ -5,8 +5,8 @@
 #include "addrspace.h"
 
 PCB::PCB(int id) {
-	joinsem = new Semaphore("JoinSem",0);
-	exitsem = new Semaphore("ExitSem",0);
+	joinsem = new Semaphore("JoinSem",0); // doc quyen truy xuat la 1
+	exitsem = new Semaphore("ExitSem",0); // thuc hien thu tu la 0
 	mutex = new Semaphore("Mutex",1);
 	
 	exitcode = 0;
@@ -57,19 +57,19 @@ int PCB::GetNumWait() {
 }
 
 void PCB::JoinWait() {
-	joinsem->P();
+	joinsem->P(); // tiến trình chuyển sang trạng thái block và ngừng lại, chờ JoinRelease để thực hiện tiếp.
 }
 
 void PCB::ExitWait() {
-	exitsem->P();
+	exitsem->P(); // giải phóng tiến trình gọi JoinWait().
 }
 
 void PCB::JoinRelease() {
-	joinsem->V();
+	joinsem->V();  // tiến trình chuyển sang trạng thái block và ngừng lại, chờ ExitReleaseđể thực hiện tiếp.
 }
 
 void PCB::ExitRelease() {
-	exitsem->V();
+	exitsem->V(); // giải phóng tiến trình đang chờ.
 }
 
 void PCB::IncNumWait() {
@@ -118,13 +118,13 @@ void StartProcess_2(int id) {
 		return;
 	}
 
-    currentThread->space = space;
+    currentThread->space = space; // gan vung nho cua con sang cha 
 
     space->InitRegisters();		
     space->RestoreState();		
 
-    currentThread->space->InitRegisters();		// set the initial register values
-	currentThread->space->RestoreState();		// load page table register
+    //currentThread->space->InitRegisters();		// set the initial register values
+	//currentThread->space->RestoreState();		// load page table register
     
 	machine->Run();			// jump to the user progam
 	delete space;
